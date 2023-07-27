@@ -1,5 +1,30 @@
 <div class="col-md-6">
     <div class="form-group">
+        <label for="nik">ID Keluarga P3KE</label>
+        <input type="text" id="id_p3ke" name="id_p3ke" class="form-control" placeholder="Masukan ID Keluarga P3KE"
+            value="{{ $poverty->id_p3ke ?? '' }}">
+        @error('id_p3ke') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="nik">Kode Kemendagri</label>
+        <input type="text" id="id_p3ke" name="id_p3ke" class="form-control" placeholder="Masukan Kode Kemendagri"
+            value="{{ $poverty->id_p3ke ?? '' }}">
+        @error('id_p3ke') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="nik">ID Individu</label>
+        <input type="text" id="id_individu" name="id_individu" class="form-control" placeholder="Masukan ID Individu"
+            value="{{ $poverty->id_p3ke ?? '' }}">
+        @error('id_individu') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="form-group">
         <label for="nik">NIK</label>
         <input type="text" id="nik" name="nik" class="form-control" placeholder="Masukan NIK"
             value="{{ $poverty->nik ?? '' }}">
@@ -44,7 +69,27 @@
             @error('alamat') <p class="text-danger text-xs pt-1">{{ $message }}</p> @enderror
         </div>
     </div>
+    
     <div class="col-md-4 d-flex flex-column">
+        <div class="form-group">
+            <label for="kecamatan2">Kecamatan</label>
+            <select class="form-select" id="kecamatan2">
+                <option selected value="">-- Pilih kecamatan --</option>
+                <input type="hidden" id="kecamatan" name="kecamatan" value="">
+                <input type="hidden" id="id_kecamatan" name="id_kecamatan" value="">
+            </select>
+            @error('id_kecamatan') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+        </div>
+        <div class="form-group">
+            <label for="kelurahan">Desa</label>
+            <select name="id_desa" class="form-select" id="kelurahan">
+                <option selected value="">-- Pilih Desa --</option>
+                <!-- load kelurahan/desa-->
+            </select>
+            @error('id_desa') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+        </div>
+    </div>
+    <div class="col-md-4 d-flex flex-column d-none">
         <div class="form-group">
             <label for="rt">RT</label>
             <input type="text" id="rt" name="rt" class="form-control" placeholder="Masukkan RT"
@@ -59,27 +104,9 @@
         </div>
     </div>
 </div>
-<div class="col-md-6 form-group">
-    <label for="kecamatan2">Kecamatan</label>
-    <select class="form-select" id="kecamatan2">
-        <option selected value="">-- Pilih kecamatan --</option>
-        <input type="hidden" id="kecamatan" name="kecamatan" value="">
-        <input type="hidden" id="id_kecamatan" name="id_kecamatan" value="">
-    </select>
-    @error('id_kecamatan') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
-</div>
 
 
-<div class="col-md-6 form-group">
-    <label for="kelurahan">Desa</label>
-    <select name="id_desa" class="form-select" id="kelurahan">
-        <option selected value="">-- Pilih Desa --</option>
-        <!-- load kelurahan/desa-->
-    </select>
-    @error('id_desa') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
-</div>
-
-<div class="col-md-6">
+<div class="col-md-6 d-none">
     <div class="form-group">
         <label for="tempat_lahir">TEMPAT LAHIR</label>
         <input type="text" id="tempat_lahir" name="tempat_lahir" class="form-control" placeholder="Masukan Tempat Lahir"
@@ -103,13 +130,25 @@
         <option selected value="">Pilih Status Keluarga</option>
         <option value="KEPALA KELUARGA" @if(isset($poverty) && $poverty->status === 'KEPALA KELUARGA') selected
             @endif>KEPALA KELUARGA</option>
-        <option value="ANGGOTA KELUARGA" @if(isset($poverty) && $poverty->status === 'ANGGOTA KELUARGA') selected
-            @endif>ANGGOTA KELUARGA</option>
+        <option value="ISTRI" @if(isset($poverty) && $poverty->status === 'ISTRI') selected
+            @endif>ISTRI</option>
+        <option value="ANAK" @if(isset($poverty) && $poverty->status === 'ANAK') selected
+            @endif>ANAK</option>
+        <option value="MENANTU" @if(isset($poverty) && $poverty->status === 'MENANTU') selected
+            @endif>MENANTU</option>
+        <option value="CUCU" @if(isset($poverty) && $poverty->status === 'CUCU') selected
+            @endif>CUCU</option>
+        <option value="KEPONAKAN" @if(isset($poverty) && $poverty->status === 'KEPONAKAN') selected
+            @endif>KEPONAKAN</option>
+        <option value="ORANG TUA" @if(isset($poverty) && $poverty->status === 'ORANG TUA') selected
+            @endif>ORANG TUA</option>
+        <option value="MERTUA" @if(isset($poverty) && $poverty->status === 'MERTUA') selected
+            @endif>MERTUA</option>
     </select>
     @error('status') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
 </div>
 
-<div class="row">
+<div class="row d-none">
     <div class="col-md-4">
         <div class="form-group">
             <label for="foto_diri">FOTO WAJAH</label><br>
