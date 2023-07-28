@@ -89,6 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
      // Poverty Data filter
      Route::post('/poverty/filter', [PovertyController::class, 'FilterData'])->name('poverty.filterData');
      Route::post('/poverty/searchData', [PovertyController::class, 'searchData'])->name('poverty.searchData');
+     Route::get('/get-poverty-assistance/{id}', [PovertyController::class, 'getPovertyAssistance']);
     // import dan export
     Route::get('/datamanagement', [DataManagementController::class, 'index'])->name('datamanagement');
     Route::get('/datamanagement/export', [DataManagementController::class, 'export'])->name('datamanagement.export');

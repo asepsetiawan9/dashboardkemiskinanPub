@@ -50,7 +50,16 @@
         <option value="YA" @if(isset($poverty) && $poverty->sembako === 'YA') selected @endif>YA</option>
         <option value="TIDAK" @if(isset($poverty) && $poverty->sembako === 'TIDAK') selected @endif>TIDAK</option>
     </select>
-    @error('pkh') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+    @error('sembako') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+</div>
+<div class="col-md-6 form-group">
+    <label for="stunting"> RESIKO STUNTING ?</label>
+    <select name="stunting" class="form-select" id="stunting">
+        <option selected value="">Pilih Stunting</option>
+        <option value="YA" @if(isset($poverty) && $poverty->sembako === 'YA') selected @endif>YA</option>
+        <option value="TIDAK" @if(isset($poverty) && $poverty->sembako === 'TIDAK') selected @endif>TIDAK</option>
+    </select>
+    @error('stunting') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
 </div>
 @push('js')
 <script>
