@@ -17,17 +17,17 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         //seeder penduduk
-        Poverty::factory()->count(1000)->create();
+        // Poverty::factory()->count(1000)->create();
 
-        //seeder user
-        // DB::table('users')->insert([
-        //     'username' => 'admin',
-        //     'firstname' => 'Admin',
-        //     'lastname' => 'Admin',
-        //     'role' => 'admin',
-        //     'email' => 'admin@argon.com',
-        //     'password' => bcrypt('secret')
-        // ]);
+        // seeder user
+        DB::table('users')->insert([
+            'username' => 'admin',
+            'firstname' => 'Admin',
+            'lastname' => 'Admin',
+            'role' => 'admin',
+            'email' => 'admin@argon.com',
+            'password' => bcrypt('secret')
+        ]);
     }
 
 }

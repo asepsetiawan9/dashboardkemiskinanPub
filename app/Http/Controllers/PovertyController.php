@@ -80,53 +80,63 @@ class PovertyController extends Controller
     }
     public function store(Request $request)
     {
-        //  dd($request);
+        //   dd($request);
         $validatedData = $request->validate([
             'nik' => 'required',
             'nama' => 'required',
             'alamat' => 'required',
-            'tempat_lahir' => 'required',
             'status' => 'required',
-            'kk' => 'required',
             'jk' => 'required',
-            'rt' => 'required',
-            'rw' => 'required',
             'tgl' => 'required',
-            'status_pendidikan' => 'required',
-            'pekerjaan' => 'required',
-            'tempat_tinggal' => 'required',
-            'sumber_air_minum' => 'required',
-            'bahan_bakar_memasak' => 'required',
+            'jenis_pekerjaan' => 'required',
             'desil' => 'required',
             'dtks' => 'required',
             'penghasilan_perbulan' => 'required',
-            'bantuan_diterima' => 'required',
             'tahun_input' => 'required',
-            'sumber_penerangan_utama' => 'required',
-            'bab' => 'required',
-            'foto_diri' => 'required|image|max:2048',
-            'foto_rumah' => 'required|image|max:2048',
+            'id_p3ke' => 'required',
+            'id_kemendagri' => 'required',
+            'id_individu' => 'required',
+            'padan_dukcapil' => 'required',
+            'status_kawin' => 'required',
+            'bpnt' => 'required',
+            'bpum' => 'required',
+            'bst' => 'required',
+            'sembako' => 'required',
+            'pkh' => 'required',
+            'stunting' => 'required',
+            'verifikasi' => 'required',
+            'dibawah_7' => 'required',
+            'usia_7_12' => 'required',
+            'usia_13_15' => 'required',
+            'usia_16_18' => 'required',
+            'usia_19_21' => 'required',
+            'usia_22_59' => 'required',
+            'lebih_60' => 'required',
         ]);
-
         $data = Poverty::create($validatedData);
         $data->jenis_pekerjaan = $request->jenis_pekerjaan;
-        $data->pendidikan_terakhir = $request->pendidikan_terakhir;
         $data->id_kecamatan = $request->id_kecamatan;
         $data->id_desa = $request->id_desa;
+        $data->pendidikan_terakhir = $request->pendidikan_terakhir;
         // dd($data);
-        if ($request->hasFile('foto_diri')) {
-            $fotoDiri = $request->file('foto_diri');
-            $fotoDiriPath = Str::random(5) . '.' . $fotoDiri->getClientOriginalExtension();
+        // if ($request->hasFile('foto_diri')) {
+        //     $fotoDiri = $request->file('foto_diri');
+        //     $fotoDiriPath = Str::random(5) . '.' . $fotoDiri->getClientOriginalExtension();
 
-            Storage::putFileAs('public/foto_diri', $fotoDiri, $fotoDiriPath);
-            $data->foto_diri = $fotoDiriPath;
-        }
+        //     Storage::putFileAs('public/foto_diri', $fotoDiri, $fotoDiriPath);
+        //     $data->foto_diri = $fotoDiriPath;
+        // }
 
-        if ($request->hasFile('foto_rumah')) {
-            $fotoRumah = $request->file('foto_rumah');
-            $fotoRumahPath = Str::random(5) . '.' . $fotoRumah->getClientOriginalExtension();
-            Storage::putFileAs('public/foto_rumah', $fotoRumah, $fotoRumahPath);
-            $data->foto_rumah = $fotoRumahPath;
+        // if ($request->hasFile('foto_rumah')) {
+        //     $fotoRumah = $request->file('foto_rumah');
+        //     $fotoRumahPath = Str::random(5) . '.' . $fotoRumah->getClientOriginalExtension();
+        //     Storage::putFileAs('public/foto_rumah', $fotoRumah, $fotoRumahPath);
+        //     $data->foto_rumah = $fotoRumahPath;
+        // }
+        if($request->dtks === "YA" || $request->bpnt === "YA" || $request->bpum === "YA" || $request->bst === "YA" || $request->sembako === "YA" || $request->pkh === "YA"){
+            $data->status_bantuan = 2;
+        }else{
+            $data->status_bantuan = 1;
         }
 
         if ($data->save()) {
@@ -149,52 +159,76 @@ class PovertyController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request);
+         
         $validatedData = $request->validate([
             'nik' => 'required',
             'nama' => 'required',
             'alamat' => 'required',
-            'tempat_lahir' => 'required',
             'status' => 'required',
-            'kk' => 'required',
             'jk' => 'required',
-            'rt' => 'required',
-            'rw' => 'required',
             'tgl' => 'required',
-            'status_pendidikan' => 'required',
-            'pekerjaan' => 'required',
-            'tempat_tinggal' => 'required',
-            'sumber_air_minum' => 'required',
-            'bahan_bakar_memasak' => 'required',
+            'jenis_pekerjaan' => 'required',
             'desil' => 'required',
             'dtks' => 'required',
             'penghasilan_perbulan' => 'required',
-            'bantuan_diterima' => 'required',
             'tahun_input' => 'required',
-            'sumber_penerangan_utama' => 'required',
-            'bab' => 'required',
+            'id_p3ke' => 'required',
+            'id_kemendagri' => 'required',
+            'id_individu' => 'required',
+            'padan_dukcapil' => 'required',
+            'status_kawin' => 'required',
+            'bpnt' => 'required',
+            'bpum' => 'required',
+            'bst' => 'required',
+            'sembako' => 'required',
+            'pkh' => 'required',
+            'stunting' => 'required',
+            'verifikasi' => 'required',
+            'dibawah_7' => 'required',
+            'usia_7_12' => 'required',
+            'usia_13_15' => 'required',
+            'usia_16_18' => 'required',
+            'usia_19_21' => 'required',
+            'usia_22_59' => 'required',
+            'lebih_60' => 'required',
+            // 'kk' => 'required',
+            // 'rt' => 'required',
+            // 'rw' => 'required',
+            // 'tempat_tinggal' => 'required',
+            // 'sumber_air_minum' => 'required',
+            // 'bahan_bakar_memasak' => 'required',
+            // 'bantuan_diterima' => 'required',
+            // 'sumber_penerangan_utama' => 'required',
+            // 'bab' => 'required',
         ]);
 
         $data = Poverty::findOrFail($id);
         $data->jenis_pekerjaan = $request->jenis_pekerjaan;
-        $data->pendidikan_terakhir = $request->pendidikan_terakhir;
         $data->id_kecamatan = $request->id_kecamatan;
+        $data->pendidikan_terakhir = $request->pendidikan_terakhir;
         $data->id_desa = $request->id_desa;
         $data->update($validatedData);
 
-        if ($request->hasFile('foto_diri')) {
-            $fotoDiri = $request->file('foto_diri');
-            $fotoDiriPath = Str::random(20) . '.' . $fotoDiri->getClientOriginalExtension();
-            Storage::putFileAs('public/foto_diri', $fotoDiri, $fotoDiriPath);
-            $data->foto_diri = $fotoDiriPath;
+        // if ($request->hasFile('foto_diri')) {
+        //     $fotoDiri = $request->file('foto_diri');
+        //     $fotoDiriPath = Str::random(20) . '.' . $fotoDiri->getClientOriginalExtension();
+        //     Storage::putFileAs('public/foto_diri', $fotoDiri, $fotoDiriPath);
+        //     $data->foto_diri = $fotoDiriPath;
+        // }
+
+        // if ($request->hasFile('foto_rumah')) {
+        //     $fotoRumah = $request->file('foto_rumah');
+        //     $fotoRumahPath = Str::random(20) . '.' . $fotoRumah->getClientOriginalExtension();
+        //     Storage::putFileAs('public/foto_rumah', $fotoRumah, $fotoRumahPath);
+        //     $data->foto_rumah = $fotoRumahPath;
+        // }
+
+        if($request->dtks === "YA" || $request->bpnt === "YA" || $request->bpum === "YA" || $request->bst === "YA" || $request->sembako === "YA" || $request->pkh === "YA"){
+            $data->status_bantuan = 2;
+        }else{
+            $data->status_bantuan = 1;
         }
 
-        if ($request->hasFile('foto_rumah')) {
-            $fotoRumah = $request->file('foto_rumah');
-            $fotoRumahPath = Str::random(20) . '.' . $fotoRumah->getClientOriginalExtension();
-            Storage::putFileAs('public/foto_rumah', $fotoRumah, $fotoRumahPath);
-            $data->foto_rumah = $fotoRumahPath;
-        }
 
         if ($data->save()) {
             Alert::success('Sukses', 'Data Kemiskinan berhasil disimpan.')->autoclose(3500);
@@ -205,10 +239,21 @@ class PovertyController extends Controller
         return redirect('poverty');
     }
 
+    public function getPovertyAssistance($id)
+    {
+
+        $poverty = Poverty::findOrFail($id);
+
+        if ($poverty->count() > 0) {
+            return response()->json($poverty);
+        } else {
+            // Jika tidak ada data bantuan, kirimkan pesan kosong sebagai respons JSON
+            return response()->json([]);
+        }
+    }
     public function show($id)
     {
         $poverty = Poverty::with('kecamatan', 'desa', 'assistance.assistDetails')->findOrFail($id);
-// dd($poverty);
         if (!$poverty) {
             return redirect('poverty')->with('error', 'Data tidak ditemukan.');
         }

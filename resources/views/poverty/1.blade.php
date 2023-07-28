@@ -1,23 +1,30 @@
 <div class="col-md-6">
     <div class="form-group">
-        <label for="nik">ID Keluarga P3KE</label>
-        <input type="text" id="id_p3ke" name="id_p3ke" class="form-control" placeholder="Masukan ID Keluarga P3KE"
+        <label for="tahun_input">TAHUN INPUT</label>
+        <input type="text" name="tahun_input" class="form-control datepicker2" placeholder="Tahun Input" data-date-format="yyyy" value="{{ $poverty->tahun_input ?? '' }}">
+        @error('tahun_input') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="id_p3ke">ID Keluarga P3KE</label>
+        <input type="number" id="id_p3ke" name="id_p3ke" class="form-control" placeholder="Masukan ID Keluarga P3KE"
             value="{{ $poverty->id_p3ke ?? '' }}">
         @error('id_p3ke') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
     </div>
 </div>
 <div class="col-md-6">
     <div class="form-group">
-        <label for="nik">Kode Kemendagri</label>
-        <input type="text" id="id_p3ke" name="id_p3ke" class="form-control" placeholder="Masukan Kode Kemendagri"
+        <label for="id_kemendagri">Kode Kemendagri</label>
+        <input type="number" id="id_kemendagri" name="id_kemendagri" class="form-control" placeholder="Masukan Kode Kemendagri"
             value="{{ $poverty->id_p3ke ?? '' }}">
-        @error('id_p3ke') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+        @error('id_kemendagri') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
     </div>
 </div>
 <div class="col-md-6">
     <div class="form-group">
-        <label for="nik">ID Individu</label>
-        <input type="text" id="id_individu" name="id_individu" class="form-control" placeholder="Masukan ID Individu"
+        <label for="id_individu">ID Individu</label>
+        <input type="number" id="id_individu" name="id_individu" class="form-control" placeholder="Masukan ID Individu"
             value="{{ $poverty->id_p3ke ?? '' }}">
         @error('id_individu') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
     </div>
@@ -26,19 +33,12 @@
 <div class="col-md-6">
     <div class="form-group">
         <label for="nik">NIK</label>
-        <input type="text" id="nik" name="nik" class="form-control" placeholder="Masukan NIK"
+        <input type="number" id="nik" name="nik" class="form-control" placeholder="Masukan NIK"
             value="{{ $poverty->nik ?? '' }}">
         @error('nik') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
     </div>
 </div>
-<div class="col-md-6">
-    <div class="form-group">
-        <label for="kk">NO KK</label>
-        <input type="text" id="kk" name="kk" class="form-control" placeholder="Masukan No KK"
-            value="{{ $poverty->kk ?? '' }}">
-        @error('kk') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
-    </div>
-</div>
+
 <div class="col-md-6">
     <div class="form-group">
         <label for="nama">NAMA LENGKAP</label>
@@ -59,6 +59,14 @@
     @error('jk') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
 </div>
 
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="tgl">TANGGAL LAHIR</label>
+        <input type="text" name="tgl" class="form-control datepicker py-2" placeholder="Masukan Tanggal Lahir"
+            data-date-format="dd-mm-yyyy" value="{{ $poverty->tgl ?? '' }}">
+        @error('tgl') <p class="text-danger text-xs pt-1">{{ $message }}</p> @enderror
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-8 ">
@@ -89,38 +97,17 @@
             @error('id_desa') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
         </div>
     </div>
-    <div class="col-md-4 d-flex flex-column d-none">
-        <div class="form-group">
-            <label for="rt">RT</label>
-            <input type="text" id="rt" name="rt" class="form-control" placeholder="Masukkan RT"
-                value="{{ $poverty->rt ?? '' }}">
-            @error('rt') <p class="text-danger text-xs pt-1">{{ $message }}</p> @enderror
-        </div>
-        <div class="form-group">
-            <label for="rw">RW</label>
-            <input type="text" id="rw" name="rw" class="form-control" placeholder="Masukkan RW"
-                value="{{ $poverty->rw ?? '' }}">
-            @error('rw') <p class="text-danger text-xs pt-1">{{ $message }}</p> @enderror
-        </div>
-    </div>
-</div>
-
-
-<div class="col-md-6 d-none">
-    <div class="form-group">
-        <label for="tempat_lahir">TEMPAT LAHIR</label>
-        <input type="text" id="tempat_lahir" name="tempat_lahir" class="form-control" placeholder="Masukan Tempat Lahir"
-            value="{{ $poverty->tempat_lahir ?? '' }}">
-        @error('tempat_lahir') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
-    </div>
 </div>
 
 <div class="col-md-6">
     <div class="form-group">
-        <label for="tgl">TANGGAL LAHIR</label>
-        <input type="text" name="tgl" class="form-control datepicker py-2" placeholder="Masukan Tanggal Lahir"
-            data-date-format="dd-mm-yyyy" value="{{ $poverty->tgl ?? '' }}">
-        @error('tgl') <p class="text-danger text-xs pt-1">{{ $message }}</p> @enderror
+        <label for="status_kawin">Status Kawin</label>
+        <select name="status_kawin" class="form-select" id="status_kawin">
+            <option selected value="">Pilih Usia</option>
+            <option value="YA" @if(isset($poverty) && $poverty->status_kawin === 'YA') selected @endif>YA</option>
+            <option value="TIDAK" @if(isset($poverty) && $poverty->status_kawin === 'TIDAK') selected @endif>TIDAK</option>
+        </select>
+        @error('status_kawin') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
     </div>
 </div>
 
@@ -148,135 +135,6 @@
     @error('status') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
 </div>
 
-<div class="row d-none">
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="foto_diri">FOTO WAJAH</label><br>
-            <input type="file" name="foto_diri" class="form-control-file" id="uploadFoto" accept=".jpg, .jpeg, .png"
-                onchange="validateUpload(this)" value="{{ $poverty->foto_diri ?? '' }}">
-            <small class="text-muted">Ukuran maksimum: 2MB</small>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div id="previewFoto"
-            class="text-center border-dashed h-100 fs-6 d-flex align-items-center justify-content-center">
-            <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 64px;"></i>
-        </div>
-    </div>
-    <div class="col-md-5">
-    </div>
-</div>
-
-@push('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-     function validateUpload(input) {
-        if (input.files && input.files[0]) {
-            var file = input.files[0];
-            var fileSize = file.size / 1024 / 1024; // Size in MB
-            var validExtensions = ['jpg', 'jpeg', 'png'];
-            var fileExtension = file.name.split('.').pop().toLowerCase();
-
-            if (fileSize > 2) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Ukuran file terlalu besar. Mohon pilih file dengan ukuran maksimum 2MB.'
-                });
-                input.value = ''; // Reset the input file
-            } else if (!validExtensions.includes(fileExtension)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Format file tidak valid. Mohon pilih file dengan format JPG, JPEG, atau PNG.'
-                });
-                input.value = ''; // Reset the input file
-            } else {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#previewFoto').html('<img src="' + e.target.result +
-                        '" class="img-thumbnail" style="max-width: 200px;">');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    }
-
-    function validateUpload2(input) {
-        if (input.files && input.files[0]) {
-            var file = input.files[0];
-            var fileSize = file.size / 1024 / 1024; // Size in MB
-            var validExtensions = ['jpg', 'jpeg', 'png'];
-            var fileExtension = file.name.split('.').pop().toLowerCase();
-
-            if (fileSize > 2) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Ukuran file terlalu besar. Mohon pilih file dengan ukuran maksimum 2MB.'
-                });
-                input.value = ''; // Reset the input file
-            } else if (!validExtensions.includes(fileExtension)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Format file tidak valid. Mohon pilih file dengan format JPG, JPEG, atau PNG.'
-                });
-                input.value = ''; // Reset the input file
-            } else {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#previewFoto2').html('<img src="' + e.target.result +
-                        '" class="img-thumbnail" style="max-width: 200px;">');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    }
-
-    $(document).ready(function () {
-        // Ambil nilai foto_diri dari data yang sedang diedit
-        var fotoDiri = '{{ $poverty->foto_diri ?? '' }}';
-
-        if (fotoDiri) {
-            // Tampilkan foto yang telah diunggah
-            var fotoUrl = '{{ asset("storage/foto_diri") }}/' + fotoDiri;
-            $('#previewFoto').html('<img src="' + fotoUrl +
-                '" class="img-thumbnail" style="max-width: 200px;">');
-        } else {
-            // Tampilkan placeholder atau ikon default
-            $('#previewFoto').html(
-                '<i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 64px;"></i>');
-        }
-
-        // Ambil nilai foto_rumah dari data yang sedang diedit
-        var fotoRumah = '{{ $poverty->foto_rumah ?? '' }}';
-
-        if (fotoRumah) {
-            // Tampilkan foto yang telah diunggah
-            var fotoUrl2 = '{{ asset("storage/foto_rumah") }}/' + fotoRumah;
-            $('#previewFoto2').html('<img src="' + fotoUrl2 +
-                '" class="img-thumbnail" style="max-width: 200px;">');
-        } else {
-            // Tampilkan placeholder atau ikon default
-            $('#previewFoto2').html(
-                '<i class="fa fa-home" aria-hidden="true" style="font-size: 64px;"></i>');
-        }
-    });
-
-</script>
-@endpush
-
-
-@push('css')
-<style>
-    .border-dashed {
-        border: 0.5px dashed #ccc;
-        padding: 5px;
-    }
-
-</style>
-@endpush
 
 @push('js')
 <script>

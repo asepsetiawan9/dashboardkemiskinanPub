@@ -76,11 +76,10 @@
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NAMA
-                                    LENGKAP</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID P3KE</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">NIK
                                 </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NO KK
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NAMA LENGKAP
                                 </th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                     KECAMATAN</th>
