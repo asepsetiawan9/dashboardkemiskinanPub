@@ -14,7 +14,7 @@
             {{ $poverty->kecamatan ? $poverty->kecamatan->name : '' }}
         </p>
     </td>
-    <td class="align-middle text-sm" data-poverty-id="{{ $poverty->id }}">
+    <td class="align-middle text-sm cursor-pointer" data-poverty-id="{{ $poverty->id }}">
         @if ($poverty->status_bantuan === "2")
             <p class="text-sm font-weight-bold mb-0 text-capitalize text-center rounded px-2 py-1 bg-success text-white">Sudah Mendapatkan</p>
         @else

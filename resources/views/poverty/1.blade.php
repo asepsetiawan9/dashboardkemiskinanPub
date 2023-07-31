@@ -104,8 +104,10 @@
         <label for="status_kawin">Status Kawin</label>
         <select name="status_kawin" class="form-select" id="status_kawin">
             <option selected value="">Pilih Usia</option>
-            <option value="YA" @if(isset($poverty) && $poverty->status_kawin === 'YA') selected @endif>YA</option>
-            <option value="TIDAK" @if(isset($poverty) && $poverty->status_kawin === 'TIDAK') selected @endif>TIDAK</option>
+            <option value="KAWIN" @if(isset($poverty) && $poverty->status_kawin === 'KAWIN') selected @endif>KAWIN</option>
+            <option value="BELUM KAWIN" @if(isset($poverty) && $poverty->status_kawin === 'BELUM KAWIN') selected @endif>BELUM KAWIN</option>
+            <option value="CERAI HIDUP" @if(isset($poverty) && $poverty->status_kawin === 'CERAI HIDUP') selected @endif>CERAI HIDUP</option>
+            <option value="CERAI MATI" @if(isset($poverty) && $poverty->status_kawin === 'CERAI MATI') selected @endif>CERAI MATI</option>
         </select>
         @error('status_kawin') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
     </div>
@@ -121,16 +123,8 @@
             @endif>ISTRI</option>
         <option value="ANAK" @if(isset($poverty) && $poverty->status === 'ANAK') selected
             @endif>ANAK</option>
-        <option value="MENANTU" @if(isset($poverty) && $poverty->status === 'MENANTU') selected
-            @endif>MENANTU</option>
-        <option value="CUCU" @if(isset($poverty) && $poverty->status === 'CUCU') selected
-            @endif>CUCU</option>
-        <option value="KEPONAKAN" @if(isset($poverty) && $poverty->status === 'KEPONAKAN') selected
-            @endif>KEPONAKAN</option>
-        <option value="ORANG TUA" @if(isset($poverty) && $poverty->status === 'ORANG TUA') selected
-            @endif>ORANG TUA</option>
-        <option value="MERTUA" @if(isset($poverty) && $poverty->status === 'MERTUA') selected
-            @endif>MERTUA</option>
+        <option value="LAINNYA" @if(isset($poverty) && $poverty->status === 'LAINNYA') selected
+            @endif>LAINNYA</option>
     </select>
     @error('status') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
 </div>
