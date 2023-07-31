@@ -20,10 +20,13 @@
                     <label for="filter2" class="text-white text-sm pb-2 font-weight-bold">Desil:</label>
                     <select class="form-select" id="filter2">
                         <option value="semua">Semua Desil</option>
-                        <option value="desil 1">Desil 1</option>
-                        <option value="desil 2">Desil 2</option>
-                        <option value="desil 3">Desil 3</option>
-                        <option value="desil 4">Desil 4</option>
+                        <option value="1">Desil 1</option>
+                        <option value="2">Desil 2</option>
+                        <option value="3">Desil 3</option>
+                        <option value="4">Desil 4</option>
+                        <option value="5">Desil 5</option>
+                        <option value="6">Desil 6</option>
+                        <option value="7">Desil 7</option>
                     </select>
                 </div>
             </div>

@@ -20,20 +20,45 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <strong for="name">NO KK</strong>
-                        <p>{{ $poverty->kk ?: '' }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
                         <strong for="name">NAMA LENGKAP</strong>
                         <p>{{ $poverty->nama ?: '' }}</p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
+                        <strong for="name">ID P3KE</strong>
+                        <p>{{ $poverty->id_p3ke ?: '' }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <strong for="name">Kode Kemendagri</strong>
+                        <p>{{ $poverty->id_kemendagri ?: '' }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <strong for="name">ID Individu</strong>
+                        <p>{{ $poverty->id_individu ?: '' }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <strong for="name">PADAN DUKCAPIL</strong>
+                        <p>{{ $poverty->padan_dukcapil ?: '' }}</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group">
                         <strong for="name">JENIS KELAMIN</strong>
                         <p>{{ $poverty->jk ?: '' }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <strong for="name">STATUS KAWIN</strong>
+                        <p>{{ $poverty->status_kawin ?: '' }}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -41,16 +66,6 @@
                         <div class="form-group">
                             <strong for="alamat">ALAMAT </strong>
                             <p>{{ $poverty->alamat ?: '' }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 d-flex flex-column">
-                        <div class="form-group">
-                            <strong for="alamat">RT </strong>
-                            <p>{{ $poverty->rt ?: '' }}</p>
-                        </div>
-                        <div class="form-group">
-                            <strong for="alamat">RW </strong>
-                            <p>{{ $poverty->rw ?: '' }}</p>
                         </div>
                     </div>
                 </div>
@@ -68,76 +83,54 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <strong for="name">TEMPAT LAHIR</strong>
-                        <p>{{ $poverty->tempat_lahir ?: '' }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
                         <strong for="name">TANGGAL LAHIR</strong>
                         <p>{{ $poverty->tgl ?: '' }}</p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <strong for="name">STATUS KEPALA KELUARGA</strong>
+                        <strong for="name">USIA</strong>
+                        @if ($poverty->dibawah_7 === "YA")
+                            <p>Dibawah 7 Tahun</p>
+                        @elseif ($poverty->usia_7_12 === "YA")
+                            <p>7 Tahun - 12 Tahun</p>
+                        @elseif ($poverty->usia_13_15 === "YA")
+                            <p>13 Tahun - 15 Tahun</p>
+                        @elseif ($poverty->usia_16_18 === "YA")
+                            <p>18 Tahun - 18 Tahun</p>
+                        @elseif ($poverty->usia_19_21 === "YA")
+                            <p>19 Tahun - 21 Tahun</p>
+                        @elseif ($poverty->usia_22_59 === "YA")
+                            <p>22 Tahun - 59 Tahun</p>
+                        @elseif ($poverty->lebih_60 === "YA")
+                            <p>Lebih 60 Tahun</p>
+                        @else
+                            <p>-</p>
+                        @endif
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <strong for="name">HUBUNGAN DENGAN KEPALA KELUARGA</strong>
                         <p>{{ $poverty->status ?: '' }}</p>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong for="name">STATUS PENDIDIKAN</strong>
-                        <p>{{ $poverty->status_pendidikan ?: '' }}</p>
-                    </div>
-                </div>
+                
                 <div class="col-md-6">
                     <div class="form-group">
                         <strong for="name">PENDIDIKAN TERAKHIR</strong>
                         <p>{{ $poverty->pendidikan_terakhir ?: '' }}</p>
                     </div>
                 </div>
+               
                 <div class="col-md-6">
                     <div class="form-group">
-                        <strong for="name">STATUS PEKERJAAN</strong>
-                        <p>{{ $poverty->pekerjaan ?: '' }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong for="name">JENIS PEKERJAAN</strong>
+                        <strong for="name">PEKERJAAN</strong>
                         <p>{{ $poverty->jenis_pekerjaan ?: '' }}</p>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong for="name">BANGUNAN TEMPAT TINGGAL</strong>
-                        <p>{{ $poverty->tempat_tinggal ?: '' }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong for="name">SUMBER AIR MINUM</strong>
-                        <p>{{ $poverty->sumber_air_minum ?: '' }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong for="name">SUMBER PENERANGAN UTAMA</strong>
-                        <p>{{ $poverty->sumber_penerangan_utama ?: '' }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong for="name">BAHAN BAKAR MEMASAK</strong>
-                        <p>{{ $poverty->bahan_bakar_memasak ?: '' }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong for="name">FASILITAS BAB</strong>
-                        <p>{{ $poverty->bab ?: '' }}</p>
-                    </div>
-                </div>
+                
                 <div class="col-md-6">
                     <div class="form-group">
                         <strong for="desil">DESIL</strong>
@@ -146,44 +139,29 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <strong for="dtks">TERDAPTAR DTKS ?</strong>
-                        <p>{{ $poverty->dtks ?: '' }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
                         <strong for="penghasilan_perbulan">PENGHASILAN PERBULAN</strong>
-                        <p>{{ $poverty->penghasilan_perbulan ?: '' }}</p>
+                        <p>Rp. {{ number_format($poverty->penghasilan_perbulan, 0, ',', '.') }}</p>
                     </div>
-                </div>
-                <div class="col-md-12">
+                </div>    
+                <div class="col-md-6">
                     <div class="form-group">
-                        <strong for="bantuan_diterima">BANTUAN YANG DITERIMA</strong>
-                        <p>{{ $poverty->bantuan_diterima ?: '' }}</p>
+                        <strong for="name">RESIKO STUNTING</strong>
+                        <p>{{ $poverty->stunting === 1 ? "YA" : 'TIDAK' }}</p>
                     </div>
-                </div>
+                </div>            
                 <div class="col-md-6">
-                    <div class="form-group d-flex flex-column thumbnail">
-                        <strong for="name">FOTO DIRI</strong>
-                        @if ($poverty->foto_diri)
-                        <img src="{{ asset('storage/foto_diri/' . $poverty->foto_diri) }}" alt="Foto Diri"
-                            style="max-width: 50%; height: auto;">
-                        @else
-                        <p>Tidak ada foto diri</p>
-                        @endif
+                    <div class="form-group">
+                        <strong for="name">VERIFIKASI</strong> <br>
+                        <p class="btn btn-info">{{ $poverty->verifikasi === "VALID" ? "VALID" : 'TIDAK VALID' }}</p>
                     </div>
-                </div>
+                </div>            
                 <div class="col-md-6">
-                    <div class="form-group d-flex flex-column thumbnail">
-                        <strong for="name">FOTO RUMAH</strong>
-                        @if ($poverty->foto_rumah)
-                        <img src="{{ asset('storage/foto_rumah/' . $poverty->foto_rumah) }}" alt="Foto Rumah"
-                            style="max-width: 50%; height: auto;">
-                        @else
-                        <p>Tidak ada foto diri</p>
-                        @endif
+                    <div class="form-group">
+                        <strong for="name">STATUS BANTUAN</strong> <br>
+                        <p class="btn btn-warning">{{ $poverty->status_bantuan === "2" ? "SUDAH MENDAPAT BANTUAN" : 'BELUM MENDAPAT BANTUAN' }}</p>
                     </div>
-                </div>
+                </div>            
+                
                 <!-- Tombol untuk membuka modal -->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assistanceModal">
                     Lihat Bantuan
@@ -201,50 +179,44 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <!-- Isi dari modal -->
-                                @if ($poverty->assistance)
-                                @if ($poverty->assistance->assistDetails->count() > 0)
-                                @foreach ($poverty->assistance->assistDetails as $assistDetail)
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <strong for="name">Nama Bantuan</strong>
-                                            <p>{{ $assistDetail->nama_bantuan ?: '' }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <strong for="name">Pemberi bantuan</strong>
-                                            <p>{{ $assistDetail->pemberi_bantuan ?: '' }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <strong for="alamat">Keterangan</strong>
-                                            <p>{{ $assistDetail->keterangan ?: '' }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group d-flex flex-column thumbnail">
-                                            <strong for="name">Bukti Bantuan</strong>
-                                            @if ($assistDetail->bukti)
-                                            <img src="{{ asset('storage/bukti/' . $assistDetail->bukti) }}"
-                                                alt="Foto Bukti" style="max-width: 50%; height: auto;">
-                                            @else
-                                            <p>Tidak ada foto bantuan</p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                @endforeach
-                                @else
-                                <p>Tidak ada data bantuan diterima.</p>
+                                @php
+                                // Inisialisasi array untuk menyimpan bantuan yang didapatkan
+                                    $bantuanList = [];
+                                @endphp
+                            
+                                @if ($poverty->pkh === "YA")
+                                    @php $bantuanList[] = 'PKH'; @endphp
                                 @endif
-                                @else
-                                <p>Tidak ada data bantuan diterima.</p>
+                            
+                                @if ($poverty->bpum === "YA")
+                                    @php $bantuanList[] = 'BPUM'; @endphp
+                                @endif
+                            
+                                @if ($poverty->bst === "YA")
+                                    @php $bantuanList[] = 'BST'; @endphp
                                 @endif
 
+                                @if ($poverty->bpnt === "YA")
+                                    @php $bantuanList[] = 'BST'; @endphp
+                                @endif
+
+                                @if ($poverty->sembako === "YA")
+                                    @php $bantuanList[] = 'BST'; @endphp
+                                @endif
+                            
+                                @if (count($bantuanList) > 0)
+                                    <div class="row">
+                                        @foreach ($bantuanList as $bantuan)
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <p>{{ $bantuan }} : YA</p>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p>Tidak ada bantuan yang didapatkan.</p>
+                                @endif
 
                             </div>
                             <div class="modal-footer">

@@ -10,10 +10,9 @@
                     <div class="form-group">
                         <div for="filter1 " class="text-white text-sm pb-2 text-bold">Tampilkan Berdasarkan:</div>
                         <select class="form-select" id="filter1" onchange="filterByKecamatan()">
-                                <option selected value="all">Jumlah Penduduk</option>
-                            @foreach ($status as $stat)
-                                <option value="{{ $stat }}">{{ $stat }}</option>
-                            @endforeach
+                                <option selected value="all">Semua Status</option>
+                                <option value="2">Sudah Mendapat Bantuan</option>
+                                <option value="1">Belum Mendapat Bantuan</option>
                         </select>
                     </div>
                 </div>
@@ -23,7 +22,7 @@
                     <div class="form-group">
                         <div for="filter2" class="text-white text-sm pb-2 text-bold">Kecamatan:</div>
                         <select class="form-select" id="filter2" onchange="filterByKecamatan()">
-                            <option selected value="jumlah_penduduk">Pilih Kecamatan</option>
+                            <option selected value="kecamatan">Pilih Kecamatan</option>
                             @foreach ($kecLabels as $index => $kecLabel)
                                 <option value="{{ $kecId[$index] }}">{{ $kecLabel }}</option>
                             @endforeach
@@ -32,15 +31,19 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <div for="filter3 " class="text-white text-sm pb-2 text-bold">Tahun:</div>
+                        <div for="filter3" class="text-white text-sm pb-2 text-bold">Tahun:</div>
                         <select class="form-select" id="filter3" onchange="filterByKecamatan()" name="year">
-                            <option selected value="all">Pilih Tahun</option>
                             @foreach ($years as $year)
-                                <option value="{{ $year }}">{{ $year }}</option>
+                                @if ($year == $latestYear)
+                                    <option value="{{ $year }}" selected>{{ $year }}</option>
+                                @else
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
                 </div>
+                
             </div>
             <div class="pb-3 text-bold text-white">Dashboard Kemiskinan Berdasarkan Jumlah Penduduk Kabupaten Garut
                 Tahun 2022
@@ -171,6 +174,18 @@
                      <div class="fs-4 text-bold" id="jml_desil4">{{ number_format($jml_desil4 ?? 0) }}</div>
                 </div>
             </div>
+            <div class="d-flex flex-row gap-3 w-100 mt-3">
+                <div class="bg-desil-5 rounded-3 p-3 w-100 text-white text-bold">Desil 5
+                    <div class="fs-4 text-bold" id="jml_desil5">{{ number_format($jml_desil5 ?? 0) }}</div>
+                </div>
+                <div class="bg-desil-6 rounded-3 p-3 w-100 text-white text-bold">Desil 6
+                     <div class="fs-4 text-bold" id="jml_desil6">{{ number_format($jml_desil6 ?? 0) }}</div>
+                </div>
+                <div class="bg-desil-7 rounded-3 p-3 w-100 text-white text-bold">Desil 7
+                     <div class="fs-4 text-bold" id="jml_desil7">{{ number_format($jml_desil7 ?? 0) }}</div>
+                </div>
+                
+            </div>
             <div class="card mt-3 p-3">
                 <h5>Peta Sebaran</h5>
                 <div id="map"></div>
@@ -289,7 +304,7 @@
         const data = {
             status: selectedStatus,
             kecId: selectedKecId,
-            kecLabel: selectedKecId === 'jumlah_penduduk' ? 'jumlah_penduduk' : selectedKecLabel,
+            kecLabel: selectedKecId === 'kecamatan' ? 'kecamatan' : selectedKecLabel,
             year: selectedYear
         };
 
@@ -410,7 +425,7 @@ function updateGeojson(year, variable) {
 
                     // Menampilkan popup saat mouse memasuki area kecamatan
                     layer.on('mouseover', function (e) {
-                        var tahun = properties.tahun !== null ? properties.tahun : 'Semua Tahun';
+                        var tahun = properties.tahun !== null ? properties.tahun : {{$latestYear}};
                         var variabel = properties.variabel !== 'all' ? properties.variabel : 'Semua Variabel';
                         variabel = properties.variabel === null ? 'TIDAK BERSEKOLAH' : variabel;
 

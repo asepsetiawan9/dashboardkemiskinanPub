@@ -41,7 +41,7 @@ class Poverty extends Model
         'bab',
         // 'status_bantuan',
         'id_p3ke',
-        'id_kemndagri',
+        'id_kemendagri',
         'id_individu',
         'padan_dukcapil',
         'status_kawin',

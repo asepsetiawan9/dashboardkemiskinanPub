@@ -22,8 +22,8 @@ class GeoJSONController extends Controller
         }
 
         foreach ($kecamatanData as $kecamatan) {
-            $query = Poverty::where('id_kecamatan', $kecamatan->id);
-            // dd($query);
+            $query = Poverty::where('id_kecamatan', $kecamatan->id)->where('tahun_input', $latestYear);
+            //  dd($query);
             if ($selectedYear !== null) {
                 $query->where('tahun_input', $selectedYear); // Menambahkan filter tahun jika dipilih
             }
