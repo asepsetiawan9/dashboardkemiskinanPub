@@ -335,6 +335,9 @@
                 document.getElementById('jml_desil2').innerText = message.jml_desil2;
                 document.getElementById('jml_desil3').innerText = message.jml_desil3;
                 document.getElementById('jml_desil4').innerText = message.jml_desil4;
+                document.getElementById('jml_desil5').innerText = message.jml_desil5;
+                document.getElementById('jml_desil6').innerText = message.jml_desil6;
+                document.getElementById('jml_desil7').innerText = message.jml_desil7;
             },
             error: function (error) {
                 console.log(error);
@@ -363,13 +366,13 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Fungsi untuk memperbarui tampilan geojson dengan filter tahun dan variabel
-function updateGeojson(year, variable) {
-    fetch(`/api/geojson?year=${year}&variable=${variable}`)
+function updateGeojson(year, variable, status) {
+    fetch(`/api/geojson?year=${year}&variable=${variable}&status=${status}`)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
+            // console.log(data);
             // Menghapus layer geojson yang ada sebelumnya
             if (geojsonLayer) {
                 map.removeLayer(geojsonLayer);
@@ -397,6 +400,7 @@ function updateGeojson(year, variable) {
                 });
             }
 
+            
             geojsonLayer = L.geoJSON(data, {
                 style: function (feature) {
                     // Mendapatkan nilai dari setiap kecamatan
@@ -422,16 +426,19 @@ function updateGeojson(year, variable) {
                 onEachFeature: function (feature, layer) {
                     // Mendapatkan properti dari setiap kecamatan
                     var properties = feature.properties;
-
+                    // console.log(properties.status);
                     // Menampilkan popup saat mouse memasuki area kecamatan
                     layer.on('mouseover', function (e) {
+                        
+                        var statusMendapat = properties.status === "2" ? 'Sudah mendapat Bantuan' : 'Belum Mendapat Bantuan';
+                        var status = properties.status !== null ? statusMendapat : 'Semua Status Bantuan';
                         var tahun = properties.tahun !== null ? properties.tahun : {{$latestYear}};
                         var variabel = properties.variabel !== 'all' ? properties.variabel : 'Semua Variabel';
                         variabel = properties.variabel === null ? 'TIDAK BERSEKOLAH' : variabel;
 
                         layer.bindPopup(
                             "<b>Tahun: </b>" + tahun +
-                            "<br><b>Variabel: </b>" + variabel +
+                            "<br><b>Status Bantuan: </b>" + status +
                             "<br><b>Kecamatan: </b>" + properties.kecamatan +
                             "<br><b>Kabupaten: </b>" + properties.nmkab +
                             "<br><b>Provinsi: </b>" + properties.nmprov +
@@ -487,23 +494,35 @@ var filterVarSelect = document.getElementById('filterVar');
 // Mendapatkan elemen select untuk filter tahun
 var filterYearSelect = document.getElementById('filter3');
 
+var filterStatusSelect = document.getElementById('filter1');
+
 // Menambahkan event listener saat nilai filter variabel berubah
 filterVarSelect.addEventListener('change', function () {
     var selectedVariable = this.value;
     var selectedYear = filterYearSelect.value;
-    updateGeojson(selectedYear, selectedVariable);
+    var selectedStatus = filterStatusSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus);
 });
 
 // Menambahkan event listener saat nilai filter tahun berubah
 filterYearSelect.addEventListener('change', function () {
     var selectedYear = this.value;
     var selectedVariable = filterVarSelect.value;
-    updateGeojson(selectedYear, selectedVariable);
+    var selectedStatus = filterStatusSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus);
+});
+
+// Menambahkan event listener saat nilai filter tahun berubah
+filterStatusSelect.addEventListener('change', function () {
+    var selectedYear = filterYearSelect.value;
+    var selectedVariable = filterVarSelect.value;
+    var selectedStatus = filterStatusSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus);
 });
 
 // Memuat geojson awal saat halaman dimuat
 var geojsonLayer;
-updateGeojson('all', 'all');
+updateGeojson('all', 'all', 'all');
 
 
 </script>

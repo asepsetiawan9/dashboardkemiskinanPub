@@ -13,6 +13,10 @@ class PovertyFactory extends Factory
     {
         return [
             "nik" => $this->faker->unique()->numerify("################"),
+            "id_p3ke" => $this->faker->unique()->numerify("###########"),
+            "padan_dukcapil" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "id_kemendagri" => $this->faker->unique()->numerify("#########"),
+            "id_individu" => $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7]),
             "nama" => $this->faker->name,
             "alamat" => $this->faker->address,
             "id_kecamatan" => $this->faker->randomElement([
@@ -494,79 +498,90 @@ class PovertyFactory extends Factory
                 432,
                 433,
             ]),
-            "tempat_lahir" => $this->faker->city,
+            "status_kawin" => $this->faker->randomElement([
+                "LAINNYA", "NELAYAN", "PEDAGANG", "PEGAWAI SWASTA", "PEKERJA LEPAS_PENSIUNAN", "TIDAK/BELUM BEKERJA", "WIRASWASTA"
+            ]),
             "status" => $this->faker->randomElement([
-                "KEPALA KELUARGA",
-                "ANGGOTA KELUARGA",
+                "KEPALA KELUARGA", "ANAK", "ISTRI", "LAINNYA"
+
             ]),
-            "kk" => $this->faker->numerify("################"),
+           
             "jk" => $this->faker->randomElement(["laki", "perempuan"]),
-            "rt" => $this->faker->randomNumber(2),
-            "rw" => $this->faker->randomNumber(2),
+            
             "tgl" => $this->faker->date(),
-            "foto_diri" => $this->faker->imageUrl(640, 480),
-            "status_pendidikan" => $this->faker->randomElement([
-                "BERSEKOLAH",
-                "TIDAK BERSEKOLAH",
-            ]),
-            "pekerjaan" => $this->faker->randomElement([
-                "BEKERJA",
-                "TIDAK/BELUM BEKERJA",
-            ]),
-            "tempat_tinggal" => $this->faker->randomElement([
-                "MILIK SENDIRI",
-                "KONTRAK/SEWA",
-                "BEBAS SEWA",
-                "BANGUNAN TEMPAT TINGGAL LAINNYA",
-            ]),
+            
             "pendidikan_terakhir" => $this->faker->randomElement([
-                "TAMAT SD / SEDERAJAT",
-                "SLTP / SEDERAJAT",
-                "SLTA/SEDERAJAT",
-                "DIPLOMA IV/ STRATA I",
-                "DIPLOMA I / II",
-                "AKADEMI/ DIPLOMA III/S. MUDA",
-                "STRATA II",
-                "STRATA III",
+                "MAHASISWA PERGURUAN TINGGI", "SISWA SD/SEDERAJAT", "SISWA SMA/SEDERAJAT", "SISWA SMP/SEDERAJAT", "TAMAT PERGURUAN TINGGI", "TAMAT SD/SEDERAJAT"," TAMAT SMA/SEDERAJAT", "TAMAT SMP/SEDERAJAT", "TIDAK TAMAT SD/SEDERAJAT", "TIDAK/BELUM SEKOLAH"
             ]),
             "jenis_pekerjaan" => $this->faker->randomElement([
-                "PETANI",
-                "NELAYAN",
-                "PEDAGANG",
-                "PEGAWAI SWASTA",
-                "WIRASWASTA",
-                "PENSIUNAN",
-                "PEKERJA LEPAS",
-                "LAINNYA",
+                "LAINNYA", "NELAYAN", "PEDAGANG", "PEGAWAI SWASTA", "PEKERJA LEPAS", "PENSIUNAN", "TIDAK/BELUM BEKERJA", "WIRASWASTA"
             ]),
-            "sumber_air_minum" => $this->faker->randomElement([
-                "AIR KEMASAN/ISI ULANGLEDENG/PAM",
-                "TERLINDUNG",
-                "TIDAK TERLINDUNG",
-                "MINUM UTAMA LAINNYA",
-            ]),
-            "bahan_bakar_memasak" => $this->faker->randomElement([
-                "LISTRIK/GAS",
-                "MINYAK TANAH",
-                "ARANG KAYU",
-                "LAINNYA",
-            ]),
-            "foto_rumah" => $this->faker->imageUrl(800, 600),
-            "desil" => $this->faker->randomElement(["DESIL 1", "DESIL 2", "DESIL 3", "DESIL 4"]),
-            "dtks" => $this->faker->randomElement(["YA", "TIDAK"]),
+            
+            
+            "desil" => $this->faker->randomElement([ 1,  2,  3,  4, 5, 6, 7]),
+           
             "penghasilan_perbulan" => $this->faker->numberBetween(100000, 5000000),
-            "bantuan_diterima" => $this->faker->randomElement(["PKH", "BPNT", "BLT"]),
-            "tahun_input" => $this->faker->randomElement([2019, 2020, 2021, 2022, 2023]),
-            "sumber_penerangan_utama" => $this->faker->randomElement([
-                "LISTRIK PLN",
-                "LISTRIK NON PLN",
-                "NON-LISTRIK",
-                "LAINNYA",
-            ]),
-            "bab" => $this->faker->randomElement(["ADA DENGAN SEPTIK TANK", "ADA TANPA SEPTIK TANK", "JAMBAN UMUM/BERSAM", "LAINNYA"]),
+            
+            "tahun_input" => $this->faker->randomElement([ 2022, 2023]),
+            "dtks" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "bpnt" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "bpum" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "bpnt" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "bst" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "pkh" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "sembako" => $this->faker->randomElement(["YA", "TIDAK"]),
             "status_bantuan" => $this->faker->randomElement([
-                1
+                1, 2
             ]),
+            "verifikasi" => $this->faker->randomElement(["VALID", "TIDAK VALID"]),
+            "stunting" => $this->faker->randomElement([0, 1, 2]),
+            "dibawah_7" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "usia_7_12" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "usia_13_15" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "usia_16_18" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "usia_19_21" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "usia_22_59" => $this->faker->randomElement(["YA", "TIDAK"]),
+            "lebih_60" => $this->faker->randomElement(["YA", "TIDAK"]),
+            // "sumber_air_minum" => $this->faker->randomElement([
+             // "kk" => $this->faker->numerify("################"),
+            // "rt" => $this->faker->randomNumber(2),
+            // "rw" => $this->faker->randomNumber(2),
+            // "foto_diri" => $this->faker->imageUrl(640, 480),
+            // "status_pendidikan" => $this->faker->randomElement([
+            //     "BERSEKOLAH",
+            //     "TIDAK BERSEKOLAH",
+            // ]),
+            // "pekerjaan" => $this->faker->randomElement([
+            //     "BEKERJA",
+            //     "TIDAK/BELUM BEKERJA",
+            // ]),
+            // "tempat_tinggal" => $this->faker->randomElement([
+            //     "MILIK SENDIRI",
+            //     "KONTRAK/SEWA",
+            //     "BEBAS SEWA",
+            //     "BANGUNAN TEMPAT TINGGAL LAINNYA",
+            // ]),
+            // "sumber_penerangan_utama" => $this->faker->randomElement([
+            //     "LISTRIK PLN",
+            //     "LISTRIK NON PLN",
+            //     "NON-LISTRIK",
+            //     "LAINNYA",
+            // ]),
+            // "bab" => $this->faker->randomElement(["ADA DENGAN SEPTIK TANK", "ADA TANPA SEPTIK TANK", "JAMBAN UMUM/BERSAM", "LAINNYA"]),
+            //     "AIR KEMASAN/ISI ULANGLEDENG/PAM",
+            //     "TERLINDUNG",
+            //     "TIDAK TERLINDUNG",
+            //     "MINUM UTAMA LAINNYA",
+            // ]),
+            // "bahan_bakar_memasak" => $this->faker->randomElement([
+            //     "LISTRIK/GAS",
+            //     "MINYAK TANAH",
+            //     "ARANG KAYU",
+            //     "LAINNYA",
+            // ]),
+            // "foto_rumah" => $this->faker->imageUrl(800, 600),
+             // "bantuan_diterima" => $this->faker->randomElement(["PKH", "BPNT", "BLT"]),
+            
         ];
     }
 }

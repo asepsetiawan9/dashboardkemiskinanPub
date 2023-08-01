@@ -9,59 +9,79 @@ use Illuminate\Http\Request;
 class GeoJSONController extends Controller
 {
     public function index(Request $request)
-    {
-        $features = [];
-        $kecamatanData = Kecamatan::all();
+{
+    
+    $features = [];
+    $kecamatanData = Kecamatan::all();
+    $selectedYear = $request->input('year');
+    $selectedStatus = $request->input('status');
+    $selectedVariable = $request->input('variable');
+    $latestYear = Poverty::max('tahun_input');
 
-        $selectedYear = $request->input('year');
-        $selectedVariable = $request->input('variable');
-        $latestYear = Poverty::max('tahun_input');
+    // If "all" is selected for year or status, set them to null to remove the filters
+    if ($selectedYear === 'all') {
+        $selectedYear = null;
+    }
+    if ($selectedStatus === 'all') {
+        $selectedStatus = null;
+    }
 
-        if ($selectedYear === 'all') {
-            $selectedYear = null; // Menghapus filter tahun jika memilih opsi 'all'
+    foreach ($kecamatanData as $kecamatan) {
+        // Use dynamic query based on the selected year
+        $query = Poverty::where('id_kecamatan', $kecamatan->id);
+
+        // Apply year filter
+        if ($selectedYear === null) {
+            // If year is not selected, use the latest year
+            $query->where('tahun_input', $latestYear);
+        } else {
+            // If year is selected, use the chosen year
+            $query->where('tahun_input', $selectedYear);
         }
 
-        foreach ($kecamatanData as $kecamatan) {
-            $query = Poverty::where('id_kecamatan', $kecamatan->id)->where('tahun_input', $latestYear);
-            //  dd($query);
-            if ($selectedYear !== null) {
-                $query->where('tahun_input', $selectedYear); // Menambahkan filter tahun jika dipilih
-            }
-
-            if ($selectedVariable !== 'all') {
-                $query->where('pendidikan_terakhir', $selectedVariable); // Menambahkan filter variabel jika dipilih
-            }
-
-            $povertyData = $query->get();
-            // dd($povertyData);
-
-            // dd($povertyData);
-            $feature = [
-                'type' => 'Feature',
-                'properties' => [
-                    'nmkab' => 'GARUT',
-                    'tahun' => $selectedYear,
-                    'variabel' => $selectedVariable,
-                    'kecamatan' => $kecamatan->name,
-                    'nmprov' => 'JAWA BARAT',
-                    'nilai' => $povertyData->count(),
-                ],
-                'geometry' => [
-                    'type' => $kecamatan->type,
-                    'coordinates' => json_decode($kecamatan->coordinates),
-                ],
-            ];
-
-            $features[] = $feature;
+        // Apply status_bantuan filter
+        if ($selectedStatus !== null) {
+            $query->where('status_bantuan', $selectedStatus);
         }
 
-        $geojson = [
-            'type' => 'FeatureCollection',
-            'features' => $features,
+        // Add other filters if applicable
+        if ($selectedVariable !== 'all') {
+            $query->where('pendidikan_terakhir', $selectedVariable);
+        }
+
+        $povertyData = $query->get();
+
+        // Construct the feature data
+        $feature = [
+            'type' => 'Feature',
+            'properties' => [
+                'nmkab' => 'GARUT',
+                'tahun' => $selectedYear,
+                'variabel' => $selectedVariable,
+                'status' => $selectedStatus,
+                'kecamatan' => $kecamatan->name,
+                'nmprov' => 'JAWA BARAT',
+                'nilai' => $povertyData->count(),
+            ],
+            'geometry' => [
+                'type' => $kecamatan->type,
+                'coordinates' => json_decode($kecamatan->coordinates),
+            ],
         ];
 
-        return response()->json($geojson);
+        $features[] = $feature;
     }
+
+    $geojson = [
+        'type' => 'FeatureCollection',
+        'features' => $features,
+    ];
+
+    return response()->json($geojson);
+}
+
+
+    
 
 
 }

@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index(request $request)
     {
-        // dd($request);
+        
         $latestPopulation = Population::latest()->first();
 
         $jml_penduduk = $latestPopulation ? $latestPopulation->jumlah_penduduk : 0;
@@ -154,7 +154,7 @@ class HomeController extends Controller
         $jml_desil5 = $status_bantuan->where('desil', 5)->count();
         $jml_desil6 = $status_bantuan->where('desil', 6)->count();
         $jml_desil7 = $status_bantuan->where('desil', 7)->count();
-
+// dd($jml_desil1, $jml_desil2, $jml_desil3, $jml_desil4, $jml_desil5, $jml_desil6, $jml_desil7);
         $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
         $dataCountByYear = [];
         if ($status !== 'all') {
