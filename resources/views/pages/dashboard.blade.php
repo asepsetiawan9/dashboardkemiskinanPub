@@ -205,156 +205,6 @@
 @endsection
 
 @push('js')
-<script src="./assets/js/plugins/chartjs.min.js"></script>
-<script>
- document.addEventListener('DOMContentLoaded', function () {
-    const ctx1 = document.getElementById('myChart').getContext('2d');
-    const ctx2 = document.getElementById('horizonChart').getContext('2d');
-    let chart1, chart2;
-    let labels = <?php echo json_encode($years); ?>;
-    let labels2 = <?php echo json_encode($nameDes); ?>;
-    let data1 = <?php echo json_encode($dataCountByYear); ?>;
-    let data2 = <?php echo json_encode($kecValue); ?>;
-
-    function createChart1(labels, data) {
-        chart1 = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: '#',
-                    data: data,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.8)',
-                        'rgba(54, 162, 235, 0.8)',
-                        'rgba(255, 206, 86, 0.8)',
-                        'rgba(75, 192, 192, 0.8)',
-                        'rgba(153, 102, 255, 0.8)',
-                        'rgba(255, 159, 64, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        return chart1;
-    }
-
-    function createChart2(labels, data) {
-        chart2 = new Chart(ctx2, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: '#',
-                    data: data,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.8)',
-                        'rgba(54, 162, 235, 0.8)',
-                        'rgba(255, 206, 86, 0.8)',
-                        'rgba(75, 192, 192, 0.8)',
-                        'rgba(153, 102, 255, 0.8)',
-                        'rgba(255, 159, 64, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-            }
-        });
-
-        return chart2;
-    }
-
-    chart1 = createChart1(labels, data1);
-    chart2 = createChart2(labels2, data2);
-
-    function filterByKecamatan() {
-        const selectElement1 = document.getElementById('filter1');
-        const selectedStatus = selectElement1.value;
-        const selectElement = document.getElementById('filter2');
-        const selectedKecId = selectElement.value;
-        const selectedKecLabel = selectElement.options[selectElement.selectedIndex].text;
-        const selectedYear = document.getElementById('filter3').value;
-
-        const data = {
-            status: selectedStatus,
-            kecId: selectedKecId,
-            kecLabel: selectedKecId === 'kecamatan' ? 'kecamatan' : selectedKecLabel,
-            year: selectedYear
-        };
-
-        // Send data using AJAX
-        $.ajax({
-            url: '{{ route("dashboard.filterKecamatan") }}',
-            method: 'GET',
-            data: data,
-            success: function (response) {
-                const message = response.message;
-                labels = message.years;
-                labels2 = message.nameDes;
-                data1 = message.dataCountByYear;
-                data2 = message.desValue;
-
-                chart1.data.labels = labels;
-                chart1.data.datasets[0].data = data1;
-                chart1.update();
-
-                chart2.data.labels = labels2;
-                chart2.data.datasets[0].data = data2;
-                chart2.update();
-
-                document.getElementById('jml_penduduk').innerText = message.jml_penduduk;
-                document.getElementById('jmlPendudukMiskin').innerText = message.jml_pen_miskin;
-                document.getElementById('persentasePendudukMiskin').innerText = message.persentase_penduduk_miskin;
-                document.getElementById('jml_desil1').innerText = message.jml_desil1;
-                document.getElementById('jml_desil2').innerText = message.jml_desil2;
-                document.getElementById('jml_desil3').innerText = message.jml_desil3;
-                document.getElementById('jml_desil4').innerText = message.jml_desil4;
-                document.getElementById('jml_desil5').innerText = message.jml_desil5;
-                document.getElementById('jml_desil6').innerText = message.jml_desil6;
-                document.getElementById('jml_desil7').innerText = message.jml_desil7;
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    }
-    document.getElementById('filter1').addEventListener('change', filterByKecamatan);
-    document.getElementById('filter2').addEventListener('change', filterByKecamatan);
-    document.getElementById('filter3').addEventListener('change', filterByKecamatan);
-});
-
-</script>
-
-@endpush
-
-
-@push('js')
 <script>
     var map = L.map('map').setView([-7.2278, 107.9087], 10);
 var colors = ['#ffd1d1', '#ffa3a3', '#fc5151', '#ff0000', '#a60202'];
@@ -529,3 +379,172 @@ updateGeojson('all', 'all', 'all');
 
 @endpush
 
+@push('js')
+<script src="./assets/js/plugins/chartjs.min.js"></script>
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    const ctx1 = document.getElementById('myChart').getContext('2d');
+    const ctx2 = document.getElementById('horizonChart').getContext('2d');
+    let chart1, chart2;
+    let labels = <?php echo json_encode($years); ?>;
+    let labels2 = <?php echo json_encode($nameDes); ?>;
+    let data1 = <?php echo json_encode($dataCountByYear); ?>;
+    let data2 = <?php echo json_encode($kecValue); ?>;
+
+    function createChart1(labels, data) {
+        chart1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '#',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                        'rgba(255, 159, 64, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                hover: {
+                    mode: 'index',
+                    intersect: false
+                },
+                animation: {
+                    duration: 5000
+                }
+        }
+        });
+
+        return chart1;
+    }
+
+    function createChart2(labels, data) {
+        chart2 = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '#',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                        'rgba(255, 159, 64, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                hover: {
+                    mode: 'index',
+                    intersect: false
+                },
+                animation: {
+                    duration: 5000
+                }
+            },
+        });
+
+        return chart2;
+    }
+
+    chart1 = createChart1(labels, data1);
+    chart2 = createChart2(labels2, data2);
+
+    function filterByKecamatan() {
+        const selectElement1 = document.getElementById('filter1');
+        const selectedStatus = selectElement1.value;
+        const selectElement = document.getElementById('filter2');
+        const selectedKecId = selectElement.value;
+        const selectedKecLabel = selectElement.options[selectElement.selectedIndex].text;
+        const selectedYear = document.getElementById('filter3').value;
+
+        const data = {
+            status: selectedStatus,
+            kecId: selectedKecId,
+            kecLabel: selectedKecId === 'kecamatan' ? 'kecamatan' : selectedKecLabel,
+            year: selectedYear
+        };
+
+        // Send data using AJAX
+        $.ajax({
+            url: '{{ route("dashboard.filterKecamatan") }}',
+            method: 'GET',
+            data: data,
+            success: function (response) {
+                const message = response.message;
+                labels = message.years;
+                labels2 = message.nameDes;
+                data1 = message.dataCountByYear;
+                data2 = message.desValue;
+
+                chart1.data.labels = labels;
+                chart1.data.datasets[0].data = data1;
+                chart1.update();
+
+                chart2.data.labels = labels2;
+                chart2.data.datasets[0].data = data2;
+                chart2.update();
+
+                document.getElementById('jml_penduduk').innerText = message.jml_penduduk;
+                document.getElementById('jmlPendudukMiskin').innerText = message.jml_pen_miskin;
+                document.getElementById('persentasePendudukMiskin').innerText = message.persentase_penduduk_miskin;
+                document.getElementById('jml_desil1').innerText = message.jml_desil1;
+                document.getElementById('jml_desil2').innerText = message.jml_desil2;
+                document.getElementById('jml_desil3').innerText = message.jml_desil3;
+                document.getElementById('jml_desil4').innerText = message.jml_desil4;
+                document.getElementById('jml_desil5').innerText = message.jml_desil5;
+                document.getElementById('jml_desil6').innerText = message.jml_desil6;
+                document.getElementById('jml_desil7').innerText = message.jml_desil7;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+    
+    document.getElementById('filter1').addEventListener('change', filterByKecamatan);
+    document.getElementById('filter2').addEventListener('change', filterByKecamatan);
+    document.getElementById('filter3').addEventListener('change', filterByKecamatan);
+});
+
+</script>
+
+@endpush

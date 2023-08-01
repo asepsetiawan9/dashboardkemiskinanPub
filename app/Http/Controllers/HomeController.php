@@ -69,8 +69,9 @@ class HomeController extends Controller
             $dataCountByYear[] = $count;
         }
         //ambil semua tahun
-        $kecId = Poverty::distinct('id_kecamatan')->pluck('id_kecamatan')->toArray();
+        $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $latestYear)->pluck('id_kecamatan')->toArray();
         $kecLabels = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
+            ->where('tahun_input', $latestYear)
             ->distinct('kecamatan.name')
             ->pluck('kecamatan.name')
             ->toArray();
@@ -78,11 +79,11 @@ class HomeController extends Controller
         //ambil semua nilai pertahun
         $kecValue = [];
         foreach ($kecId as $kec) {
-            $count = Poverty::where('id_kecamatan', $kec)->count();
+            $count = Poverty::where('id_kecamatan', $kec)->where('tahun_input', $latestYear)->count();
             $kecValue[] = $count;
         }
         
-
+        // dd($kecId, $kecValue);
         $nameDes = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
         ->where('tahun_input', $latestYear)
         ->distinct('kecamatan.name')
@@ -154,7 +155,7 @@ class HomeController extends Controller
         $jml_desil5 = $status_bantuan->where('desil', 5)->count();
         $jml_desil6 = $status_bantuan->where('desil', 6)->count();
         $jml_desil7 = $status_bantuan->where('desil', 7)->count();
-// dd($jml_desil1, $jml_desil2, $jml_desil3, $jml_desil4, $jml_desil5, $jml_desil6, $jml_desil7);
+
         $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
         $dataCountByYear = [];
         if ($status !== 'all') {
