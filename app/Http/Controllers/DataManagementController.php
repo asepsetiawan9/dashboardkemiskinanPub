@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\DataManagementExport;
 use App\Imports\DataManagementImport;
 use DB;
+use Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Storage;
@@ -39,17 +40,16 @@ class DataManagementController extends Controller
         //remove from server
         Storage::delete($path);
 
-        if($import) {
-            //redirect
-            return redirect()->route('datamanagement')->with(['success' => 'Data Berhasil Diimport!']);
+        if ($import) {
+            Alert::success('Sukses', 'Data berhasil diimport.')->autoclose(3500);
         } else {
-            //redirect
-            return redirect()->route('datamanagement')->with(['error' => 'Data Gagal Diimport!']);
+            Alert::error('Error', 'Terjadi kesalahan saat menyimpan data.')->autoclose(3500);
         }
+        return redirect('datamanagement');
     }
     public function download()
     {
-        $filePath = storage_path('app/public/template.xlsx');
+        $filePath = storage_path('app/public/template_data_kemiskinan.xlsx');
         $headers = [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ];

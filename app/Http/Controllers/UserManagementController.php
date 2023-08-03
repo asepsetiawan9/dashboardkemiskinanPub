@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Alert;
 use View;
 
 class UserManagementController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:user-create', ['only' => ['create','store']]);
+         $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $users = User::paginate(5);
@@ -45,22 +53,26 @@ class UserManagementController extends Controller
 
     public function create()
     {
-        return view('users.create');
+        $roles = Role::pluck('name','name')->all();
+        return view('users.create',compact('roles'));
     }
     public function store(Request $request)
     {
+        // dd($request->roles[0]);
         $attributes = request()->validate([
             'username' => 'required|max:255|min:5',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:5|max:255',
             'konfirm-pass' => 'required|same:password',
             'phone' => 'required|min:10|max:15',
-            'role' => 'required',
+            
         ], [
             'konfirm-pass.same' => 'Password Harus Sama.',
         ]);
 
+        // $user->role
         $user = User::create($attributes);
+        $user->assignRole($request->input('roles'));
 
         if ($user) {
             Alert::success('Sukses', 'Data berhasil disimpan.')->autoclose(3500);
@@ -75,11 +87,14 @@ class UserManagementController extends Controller
     {
 
         $user = User::find($id);
+        $roles = Role::pluck('name','name')->all();
+        $userRole = $user->roles->pluck('name','name')->all();
+        // ,compact('roles')
         if (!$user) {
             return redirect('user-management')->with('error', 'Pengguna tidak ditemukan.');
         }
 
-        return view('users.edit', compact('user'));
+        return view('users.edit', compact('user', 'roles', 'userRole'));
     }
 
     public function update(Request $request, $id)
@@ -94,7 +109,7 @@ class UserManagementController extends Controller
         $user = User::findOrFail($id);
         $user->username = $attributes['username'];
         $user->phone = $attributes['phone'];
-        $user->role = $request->role;
+        // $user->role = $request->role;
         $user->email = $request->email;
         $user->city = ucwords(strtolower($request->kecamatan_name));
         $user->desa = ucwords(strtolower($request->desa));
@@ -103,6 +118,7 @@ class UserManagementController extends Controller
             $user->password = $request->password;
         }
 
+        $user->assignRole($request->input('roles'));
         $user->save();
 
         if ($user) {

@@ -12,9 +12,16 @@ use View;
 
 class PovertyController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('permission:poverty-list|poverty-create|poverty-edit|poverty-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:poverty-create', ['only' => ['create','store']]);
+         $this->middleware('permission:poverty-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:poverty-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
-        $povertys = Poverty::with('kecamatan', 'desa')->paginate(5);
+        $povertys = Poverty::with('kecamatan', 'desa')->paginate(10);
         $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
 
         return view('poverty.index', compact('povertys', 'years'));

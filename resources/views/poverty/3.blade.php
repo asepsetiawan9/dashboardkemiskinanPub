@@ -56,8 +56,9 @@
     <label for="stunting"> RESIKO STUNTING ?</label>
     <select name="stunting" class="form-select" id="stunting">
         <option selected value="">Pilih Stunting</option>
-        <option value="YA" @if(isset($poverty) && $poverty->sembako === 'YA') selected @endif>YA</option>
-        <option value="TIDAK" @if(isset($poverty) && $poverty->sembako === 'TIDAK') selected @endif>TIDAK</option>
+        <option value="1" @if(isset($poverty) && $poverty->sembako === '1') selected @endif>YA</option>
+        <option value="2" @if(isset($poverty) && $poverty->sembako === '2') selected @endif>TIDAK</option>
+        <option value="3" @if(isset($poverty) && $poverty->sembako === '3') selected @endif>Lainnya</option>
     </select>
     @error('stunting') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
 </div>

@@ -12,9 +12,14 @@ class DataManagementExport implements FromCollection, WithHeadings, WithMapping
     /**
     * @return \Illuminate\Support\Collection
     */
+    
+
     public function collection()
     {
-        return Poverty::all();
+        return Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
+            ->join('desa', 'poverties.id_desa', '=', 'desa.id')
+            ->select('poverties.*', 'kecamatan.name as kecamatan_name', 'desa.name_desa as desa_name')
+            ->get();
     }
 
     /**
@@ -22,71 +27,84 @@ class DataManagementExport implements FromCollection, WithHeadings, WithMapping
     */
     public function map($poverty): array
     {
+        $kabupaten = 'Garut';
+        $statusBantuan = ($poverty->status_bantuan == 2) ? "Mendapat Bantuan" : "Belum Mendapat Bantuan";
+        $stunting = $poverty->stunting === 1 ? "YA" : ($poverty->stunting === 2 ? "TIDAK" : "LAINNYA");
+        $penghasilan_perbulan = number_format($poverty->penghasilan_perbulan, 0, ',', '.');
+
         return [
+            $poverty->tahun_input,
+            $poverty->desil,
+            $poverty->id_p3ke,
+            $poverty->id_kemendagri,
+            $poverty->id_individu,
             $poverty->nik,
             $poverty->nama,
             $poverty->alamat,
-            $poverty->id_kecamatan, // Kolom ID Kecamatan
-            $poverty->tempat_lahir,
+            $kabupaten,
+            $poverty->kecamatan_name,
+            $poverty->desa_name,
             $poverty->status,
-            $poverty->kk,
             $poverty->jk,
-            $poverty->rt,
-            $poverty->rw,
-            $poverty->id_desa, // Kolom ID Desa
             $poverty->tgl,
-            $poverty->foto_diri,
-            $poverty->status_pendidikan,
-            $poverty->pekerjaan,
-            $poverty->tempat_tinggal,
             $poverty->pendidikan_terakhir,
             $poverty->jenis_pekerjaan,
-            $poverty->sumber_air_minum,
-            $poverty->bahan_bakar_memasak,
-            $poverty->foto_rumah,
-            $poverty->desil,
-            $poverty->penghasilan,
+            $penghasilan_perbulan,
             $poverty->dtks,
-            $poverty->penghasilan_perbulan,
-            $poverty->bantuan_diterima,
-            $poverty->tahun_input,
-            $poverty->sumber_penerangan_utama,
-            $poverty->bab,
+            $poverty->bpnt,
+            $poverty->bpum,
+            $poverty->bst,
+            $poverty->pkh,
+            $poverty->sembako,
+            $stunting,
+            $poverty->verifikasi,
+            $poverty->dibawah_7,
+            $poverty->usia_7_12,
+            $poverty->usia_13_15,
+            $poverty->usia_16_18,
+            $poverty->usia_19_21,
+            $poverty->usia_22_59,
+            $poverty->lebih_60,
+            $statusBantuan,
         ];
     }
 
     public function headings(): array
     {
         return [
-            'NIK',
-            'Nama',
-            'Alamat',
-            'Kecamatan',
-            'Tempat Lahir',
-            'Status',
-            'KK',
-            'Jenis Kelamin',
-            'RT',
-            'RW',
-            'Desa',
-            'Tanggal',
-            'Foto Diri',
-            'Status Pendidikan',
-            'Pekerjaan',
-            'Tempat Tinggal',
-            'Pendidikan Terakhir',
-            'Jenis Pekerjaan',
-            'Sumber Air Minum',
-            'Bahan Bakar Memasak',
-            'Foto Rumah',
-            'Desil',
-            'Penghasilan',
-            'DTKS',
-            'Penghasilan Perbulan',
-            'Bantuan Diterima',
             'Tahun Input',
-            'Sumber Penerangan Utama',
-            'Fasilitas BAB',
+            'Desil Kesejahteraan',
+            'ID Keluarga P3KE',
+            'Kode Kemendagri',
+            'ID Individu',
+            'NIK',
+            'Nama Lengkap',
+            'Alamat',
+            'Kabupaten',
+            'Kecamatan',
+            'Desa',
+            'Hubungan dengan Kepala Keluarga',
+            'Jenis Kelamin',
+            'Tanggal Lahir',
+            'Pendidikan',
+            'Pekerjaan',
+            'Pendapatan',
+            'Kepesertaan DTKS',
+            'Penerima BPNT',
+            'Penerima BPUM',
+            'Penerima BST',
+            'Penerima PKH',
+            'Penerima SEMBAKO',
+            'Resiko Stunting',
+            'Verifikasi Lapangan',
+            'Usia dibawah 7 Tahun',
+            'Usia 7-12',
+            'Usia 13-15',
+            'Usia 16-18',
+            'Usia 19-21',
+            'Usia 22-50',
+            'Usia 60 Tahun Keatas',
+            'Status Bantuan'
         ];
     }
 }
