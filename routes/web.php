@@ -31,9 +31,11 @@ use App\Http\Controllers\PovertyController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\DataManagementController;
 use App\Http\Controllers\AssistanceController;
+use App\Http\Controllers\RoleController;
 
 
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
+    
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 	Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
 	Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
@@ -44,7 +46,10 @@ Route::get('/', function () {return redirect('/dashboard');})->middleware('auth'
 	Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionsController::class);
+
     Route::get('/dashboard/filterKecamatan', [HomeController::class, 'filterKecamatan'])->name('dashboard.filterKecamatan');
 	// Route::get('/dashboard/geojson', [HomeController::class, 'geojson'])->name('dashboard.geojson');
     Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');

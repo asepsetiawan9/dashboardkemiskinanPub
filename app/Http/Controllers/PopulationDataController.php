@@ -8,7 +8,13 @@ use Illuminate\Http\Request;
 
 class PopulationDataController extends Controller
 {
-
+    function __construct()
+    {
+         $this->middleware('permission:population-list|population-create|population-edit|population-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:population-create', ['only' => ['create','store']]);
+         $this->middleware('permission:population-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:population-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $populations = Population::paginate(5);

@@ -31,15 +31,7 @@
                             @error('phone') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
                         </div>
                     </div>
-                    <div class="col-md-6 form-group">
-                        <label for="jenis">JENIS</label>
-                        <select name="role" class="form-select" id="jenis">
-                            <option selected value="admin">Administrator</option>
-                            <option value="kec">Admin Kecamatan</option>
-                            <option value="des">Admin Desa</option>
-                        </select>
-                        @error('role') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
-                    </div>
+                    
                     <div class="col-md-6 form-group">
                         <label for="kecamatan">KECAMATAN</label>
                         <select class="form-select" id="kecamatan">
@@ -71,6 +63,25 @@
                             @error('konfirm-pass') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="roles">Roles</label>
+                            <select name="roles[]" id="roles" class="selectRole form-control">
+                                @foreach($roles as $role)
+                                    <option value="{{ $role }}">{{ $role }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    {{-- <div class="col-md-6 form-group">
+                        <label for="jenis">JENIS</label>
+                        <select name="role" class="form-select" id="jenis">
+                            <option selected value="admin">Administrator</option>
+                            <option value="kec">Admin Kecamatan</option>
+                            <option value="des">Admin Desa</option>
+                        </select>
+                        @error('role') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+                    </div> --}}
                  </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -137,5 +148,13 @@
         .catch(error => {
             console.error('Error:', error);
         });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Inisialisasi elemen select2
+        $('.selectRole').select2();
+    });
+
 </script>
 @endpush

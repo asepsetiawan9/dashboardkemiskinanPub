@@ -21,6 +21,7 @@
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
+            @can('map-list')
             <li class="nav-item">
                 <a class="nav-link {{ Route::currentRouteName() == 'map' ? 'active' : '' }}" href="{{ route('map') }}">
                     <div
@@ -30,9 +31,12 @@
                     <span class="nav-link-text ms-1">Peta Sebaran</span>
                 </a>
             </li>
+            @endcan
             <li class="nav-item mt-3 d-flex align-items-center">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">MANAJEMEN DATA</h6>
             </li>
+
+            @can('user-list')
             <li class="nav-item">
             <a class="nav-link {{ str_contains(request()->url(), 'user-management') == true ? 'active' : '' }}"
                     href="{{ route('page', ['page' => 'user-management']) }}">
@@ -42,7 +46,23 @@
                     </div>
                     <span class="nav-link-text ms-1">Data Pengguna</span>
                 </a>
+                
             </li>
+            @endcan
+
+            @can('role-list')
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'roles') == true ? 'active' : '' }}"
+                    href="{{ route('page', ['page' => 'roles']) }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa fa-address-card text-success text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Role Pengguna</span>
+                </a>
+            </li>
+            @endcan
+            @can('population-list')
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'population-data') == true ? 'active' : '' }}"
                     href="{{ route('page', ['page' => 'population-data']) }}">
@@ -53,7 +73,8 @@
                     <span class="nav-link-text ms-1">Data Penduduk</span>
                 </a>
             </li>
-
+             @endcan
+            @can('poverty-list')
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'poverty') == true ? 'active' : '' }}"
                     href="{{ route('page', ['page' => 'poverty']) }}">
@@ -64,7 +85,8 @@
                     <span class="nav-link-text ms-1">Data Kemiskinan</span>
                 </a>
             </li>
-
+            @endcan
+            {{-- @can('poverty-list')
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'assistance') == true ? 'active' : '' }}"
                     href="{{ route('page', ['page' => 'assistance']) }}">
@@ -75,6 +97,7 @@
                     <span class="nav-link-text ms-1">Data Bantuan</span>
                 </a>
             </li>
+            @endcan --}}
 
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">MANAJEMEN APLIKASI</h6>
@@ -89,6 +112,7 @@
                     <span class="nav-link-text ms-1">Ubah Profil</span>
                 </a>
             </li>
+            @can('datamanagement-list')
             <li class="nav-item">
             <a class="nav-link {{ str_contains(request()->url(), 'datamanagement') == true ? 'active' : '' }}"
                     href="{{ route('page', ['page' => 'datamanagement']) }}">
@@ -99,6 +123,7 @@
                     <span class="nav-link-text ms-1">Management Data</span>
                 </a>
             </li>
+            @endcan
         </ul>
     </div>
 

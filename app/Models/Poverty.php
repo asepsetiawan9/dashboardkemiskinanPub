@@ -57,7 +57,8 @@ class Poverty extends Model
         'usia_16_18',
         'usia_19_21',
         'usia_22_59',
-        'lebih_60'
+        'lebih_60',
+        'status_bantuan',
     ];
 
     public function kecamatan()

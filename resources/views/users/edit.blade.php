@@ -73,6 +73,12 @@
                                 <input type="password" name="konfirm-pass" class="form-control" placeholder="Konfirmasi Password" aria-label="Password">
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="konfirm-pass">Role</label>
+                                {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control','multiple')) !!}
+                            </div>
+                        </div>
                  </div>
                 <div class="row">
                     <div class="col-md-12">
