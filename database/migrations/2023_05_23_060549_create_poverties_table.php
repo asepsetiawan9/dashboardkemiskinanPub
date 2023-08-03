@@ -21,6 +21,8 @@ return new class extends Migration
             $table->biginteger('nik')->nullable();
             $table->string('nama')->nullable();
             $table->text('alamat')->nullable();
+            $table->string('provinsi')->nullable();
+            $table->string('kabupaten')->nullable();
             $table->integer('id_kecamatan')->nullable()->default(0);
             $table->integer('id_desa')->nullable()->default(0);
             $table->string('status')->nullable();
