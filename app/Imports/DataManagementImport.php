@@ -15,6 +15,7 @@ class DataManagementImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         $status_bantuan = "1";
+        $row = array_map('strtoupper', $row);
         //  dd($row);
 
         if ($row['kepesertaan_dtks'] === 'YA' ||
@@ -28,31 +29,24 @@ class DataManagementImport implements ToModel, WithHeadingRow
         }
         //  dd($status_bantuan);
         return new poverty([
-            'tahun_input' => $row['tahun_input'],
-            'desil' => $row['desil_kesejahteraan'],
             'id_p3ke' => $row['id_keluarga_p3ke'],
-            'id_kemendagri' => $row['kode_kemendagri'],
-            'id_individu' => $row['id_individu'],
-            'padan_dukcapil' => $row['padan_dukcapil'],
-            'nik' => $row['nik'],
-            'nama' => $row['nama_lengkap'],
-            'alamat' => $row['alamat'],
             'id_kecamatan' => $row['id_kecamatan'],
             'id_desa' => $row['id_desa'],
-            'status' => $row['hubungan_dengan_kepala_keluarga'],
+            'id_kemendagri' => $row['kode_kemendagri'],
+            'desil' => $row['desil_kesejahteraan'],
+            'alamat' => $row['alamat'],
+            'provinsi' => $row['provinsi'],
+            'kabupaten' => $row['kabupaten'],
+            'id_individu' => $row['id_individu'],
+            'nama' => $row['nama_lengkap'],
+            'nik' => $row['nik'],
+            'padan_dukcapil' => $row['padan_dukcapil'],
             'jk' => $row['jenis_kelamin'],
+            'status' => $row['hubungan_dengan_kepala_keluarga'],
             'tgl' => $row['tanggal_lahir'],
-            'pendidikan_terakhir' => $row['pendidikan'],
+            'status_kawin' => $row['status_kawin'],
             'jenis_pekerjaan' => $row['pekerjaan'],
-            'penghasilan_perbulan' => $row['pendapatan'],
-            'dtks' => $row['kepesertaan_dtks'],
-            'bpnt' => $row['penerima_bpnt'],
-            'bpum' => $row['penerima_bpum'],
-            'bst' => $row['penerima_bst'],
-            'pkh' => $row['penerima_pkh'],
-            'sembako' => $row['penerima_sembako'],
-            'stunting' => $row['resiko_stunting'],
-            'verifikasi' => $row['verifikasi_lapangan'],
+            'pendidikan_terakhir' => $row['pendidikan'],
             'dibawah_7' => $row['usia_dibawah_7_tahun'],
             'usia_7_12' => $row['usia_7_12'],
             'usia_13_15' => $row['usia_13_15'],
@@ -60,6 +54,16 @@ class DataManagementImport implements ToModel, WithHeadingRow
             'usia_19_21' => $row['usia_19_21'],
             'usia_22_59' => $row['usia_22_59'],
             'lebih_60' => $row['usia_60_tahun_keatas'],
+            'bpnt' => $row['penerima_bpnt'],
+            'bpum' => $row['penerima_bpum'],
+            'bst' => $row['penerima_bst'],
+            'pkh' => $row['penerima_pkh'],
+            'sembako' => $row['penerima_sembako'],
+            'stunting' => $row['resiko_stunting'],
+            'dtks' => $row['kepesertaan_dtks'],
+            'verifikasi' => $row['verifikasi_lapangan'],
+            'penghasilan_perbulan' => $row['pendapatan'],
+            'tahun_input' => 2023,    
             'status_bantuan' => $status_bantuan,
         ]);
     }

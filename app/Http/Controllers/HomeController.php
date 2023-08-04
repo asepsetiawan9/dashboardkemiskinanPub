@@ -6,6 +6,7 @@ use App\Models\Kecamatan;
 use App\Models\Population;
 use App\Models\Poverty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -26,81 +27,155 @@ class HomeController extends Controller
      */
     public function index(request $request)
     {
-        
-        $latestPopulation = Population::latest()->first();
-
-        $jml_penduduk = $latestPopulation ? $latestPopulation->jumlah_penduduk : 0;
-
-        //jumlah  penduduk miskin tahun terakhir
         $latestYear = Poverty::max('tahun_input');
-        $jml_pen_miskin = Poverty::where('tahun_input', $latestYear)->count();
-
-        $persentasePendudukMiskin = 0;
-
-        if ($jml_penduduk > 0) {
-            $persentasePendudukMiskin = ($jml_pen_miskin / $jml_penduduk) * 100;
-        }
-
-        //jumlah desil terakhir
-        $jml_desil1 = Poverty::where('desil', 1)
-        ->where('tahun_input', $latestYear)->count();
-        $jml_desil2 = Poverty::where('desil', 2)
-        ->where('tahun_input', $latestYear)->count();
-        $jml_desil3 = Poverty::where('desil', 3)
-        ->where('tahun_input', $latestYear)->count();
-        $jml_desil4 = Poverty::where('desil', 4)
-        ->where('tahun_input', $latestYear)->count();
-        $jml_desil5 = Poverty::where('desil', 5)
-        ->where('tahun_input', $latestYear)->count();
-        $jml_desil6 = Poverty::where('desil', 6)
-        ->where('tahun_input', $latestYear)->count();
-        $jml_desil7 = Poverty::where('desil', 7)
-        ->where('tahun_input', $latestYear)->count();
-
-        //ambil semua tahun
-        $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
+        $userRole = Auth::user()->role;
+        $loggedInUserKecamatanName = Auth::user()->city;
         
-        $status = Poverty::distinct('status')->pluck('status')->toArray();
-    
-        //ambil semua nilai pertahun
-        $dataCountByYear = [];
-        foreach ($years as $year) {
-            $count = Poverty::where('tahun_input', $year)->count();
-            $dataCountByYear[] = $count;
-        }
-        //ambil semua tahun
+        // Cari ID kecamatan dari tabel property berdasarkan nama kecamatan yang ada di tabel city
+        $loggedInUserKecamatanId = Kecamatan::where('name', $loggedInUserKecamatanName)->value('id');
         $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $latestYear)->pluck('id_kecamatan')->toArray();
-        $kecLabels = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
+        $id_desa = Poverty::where('id_kecamatan', $loggedInUserKecamatanId)->where('tahun_input', $latestYear)->pluck('id_desa')->unique()->toArray();
+
+       if ($userRole === "Kecamatan") {
+            // $latestPopulation = Population::where($loggedInUserKecamatanName)->latest()->first();
+
+            $latestPopulation = Population::where('tahun', $latestYear)->first();
+            $namakecamatan = strtolower($loggedInUserKecamatanName);
+            $jml_penduduk = $latestPopulation ? $latestPopulation->{$namakecamatan} : 0;
+
+            $jml_pen_miskin = Poverty::where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+
+            $persentasePendudukMiskin = 0;
+
+            if ($jml_penduduk > 0) {
+                $persentasePendudukMiskin = ($jml_pen_miskin / $jml_penduduk) * 100;
+            }
+
+            //jumlah desil terakhir
+            $jml_desil1 = Poverty::where('desil', 1)
+            ->where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+            $jml_desil2 = Poverty::where('desil', 2)
+            ->where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+            $jml_desil3 = Poverty::where('desil', 3)
+            ->where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+            $jml_desil4 = Poverty::where('desil', 4)
+            ->where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+            $jml_desil5 = Poverty::where('desil', 5)
+            ->where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+            $jml_desil6 = Poverty::where('desil', 6)
+            ->where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+            $jml_desil7 = Poverty::where('desil', 7)
+            ->where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+
+            //ambil semua tahun
+        
+            
+            $status = Poverty::distinct('status')->pluck('status')->toArray();
+            $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
+
+            $dataCountByYear = [];
+            foreach ($years as $year) {
+                $count = Poverty::where('tahun_input', $year)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
+                $dataCountByYear[] = $count;
+            }
+            
+            $nameDes = Poverty::join('desa', 'poverties.id_desa', '=', 'desa.id')
+                ->where('poverties.id_kecamatan', $loggedInUserKecamatanId)
+                ->where('tahun_input', $latestYear)
+                ->distinct('desa.name_desa')
+                ->pluck('desa.name_desa')
+                ->toArray();
+           
+           
+            $kecValue = [];
+            foreach ($id_desa as $des) {
+                $count = Poverty::where('id_desa', $des)
+                    ->where('tahun_input', $latestYear)
+                    ->count();
+                $kecValue[] = $count;
+            }
+            // dd($desV')
+            $kecLabels = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
+            ->where('tahun_input', $latestYear)
+            ->distinct('kecamatan.name')
+            ->pluck('kecamatan.name')
+            ->toArray();
+            $desValue= '';
+            
+       }else{
+            $latestPopulation = Population::latest()->first();
+
+            $jml_penduduk = $latestPopulation ? $latestPopulation->jumlah_penduduk : 0;
+
+            //jumlah  penduduk miskin tahun terakhir
+            
+            $jml_pen_miskin = Poverty::where('tahun_input', $latestYear)->count();
+
+            $persentasePendudukMiskin = 0;
+
+            if ($jml_penduduk > 0) {
+                $persentasePendudukMiskin = ($jml_pen_miskin / $jml_penduduk) * 100;
+            }
+
+            //jumlah desil terakhir
+            $jml_desil1 = Poverty::where('desil', 1)
+            ->where('tahun_input', $latestYear)->count();
+            $jml_desil2 = Poverty::where('desil', 2)
+            ->where('tahun_input', $latestYear)->count();
+            $jml_desil3 = Poverty::where('desil', 3)
+            ->where('tahun_input', $latestYear)->count();
+            $jml_desil4 = Poverty::where('desil', 4)
+            ->where('tahun_input', $latestYear)->count();
+            $jml_desil5 = Poverty::where('desil', 5)
+            ->where('tahun_input', $latestYear)->count();
+            $jml_desil6 = Poverty::where('desil', 6)
+            ->where('tahun_input', $latestYear)->count();
+            $jml_desil7 = Poverty::where('desil', 7)
+            ->where('tahun_input', $latestYear)->count();
+
+            $status = Poverty::distinct('status')->pluck('status')->toArray();
+            $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
+
+            $dataCountByYear = [];
+            foreach ($years as $year) {
+                $count = Poverty::where('tahun_input', $year)->count();
+                $dataCountByYear[] = $count;
+            }
+            //ambil semua tahun
+            $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $latestYear)->pluck('id_kecamatan')->toArray();
+            $kecLabels = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
+                ->where('tahun_input', $latestYear)
+                ->distinct('kecamatan.name')
+                ->pluck('kecamatan.name')
+                ->toArray();
+
+            //ambil semua nilai pertahun
+            $kecValue = [];
+            foreach ($kecId as $kec) {
+                $count = Poverty::where('id_kecamatan', $kec)->where('tahun_input', $latestYear)->count();
+                $kecValue[] = $count;
+            }
+            
+            // dd($kecId, $kecValue);
+            $nameDes = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
             ->where('tahun_input', $latestYear)
             ->distinct('kecamatan.name')
             ->pluck('kecamatan.name')
             ->toArray();
 
-        //ambil semua nilai pertahun
-        $kecValue = [];
-        foreach ($kecId as $kec) {
-            $count = Poverty::where('id_kecamatan', $kec)->where('tahun_input', $latestYear)->count();
-            $kecValue[] = $count;
+            //ambil semua nilai pertahun
+            $desValue = [];
+            foreach ($kecId as $kec) {
+                $count = Poverty::where('id_kecamatan', $kec)->count();
+                $kecValue[] = $count;
+            }
         }
         
-        // dd($kecId, $kecValue);
-        $nameDes = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
-        ->where('tahun_input', $latestYear)
-        ->distinct('kecamatan.name')
-        ->pluck('kecamatan.name')
-        ->toArray();
 
-        //ambil semua nilai pertahun
-        $desValue = [];
-        foreach ($kecId as $kec) {
-            $count = Poverty::where('id_kecamatan', $kec)->count();
-            $kecValue[] = $count;
-        }
         $message = 'kosong';
-        // dd($desValue);
-        return view('pages.dashboard', compact('latestPopulation', 'jml_pen_miskin', 'persentasePendudukMiskin', 'jml_desil1', 'jml_desil2', 'jml_desil3', 'jml_desil4', 'jml_desil5','jml_desil6','jml_desil7', 'years',
-        'dataCountByYear', 'kecLabels', 'kecId',
-        'kecValue', 'message', 'nameDes', 'desValue', 'status', 'latestYear'));
+        return view('pages.dashboard', compact('jml_penduduk', 'latestPopulation', 'jml_pen_miskin', 'persentasePendudukMiskin', 'jml_desil1', 'jml_desil2', 'jml_desil3', 'jml_desil4', 'jml_desil5','jml_desil6','jml_desil7', 'years',
+        'dataCountByYear', 'kecLabels', 'kecId', 'kecValue', 'message', 'nameDes', 'desValue', 'status', 'latestYear', 'userRole', 'loggedInUserKecamatanName', 'loggedInUserKecamatanId'
+        ));
     }
 
     public function filterKecamatan(Request $request)
