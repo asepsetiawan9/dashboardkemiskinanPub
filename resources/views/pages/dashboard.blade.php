@@ -22,13 +22,14 @@
                     <div class="form-group">
                         <div for="filter2" class="text-white text-sm pb-2 text-bold">Kecamatan:</div>
                         <select class="form-select" id="filter2" onchange="filterByKecamatan()">
-                            <option selected value="kecamatan">Pilih Kecamatan</option>
+                            <option value="kecamatan">Pilih Kecamatan</option>
                             @foreach ($kecLabels as $index => $kecLabel)
-                                <option value="{{ $kecId[$index] }}">{{ $kecLabel }}</option>
+                                <option value="{{ $kecId[$index] }}" @if($userRole === 'Kecamatan' && $kecId[$index] === $loggedInUserKecamatanId) selected @endif>{{ $kecLabel }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
+                    
                 <div class="col-md-4">
                     <div class="form-group">
                         <div for="filter3" class="text-white text-sm pb-2 text-bold">Tahun:</div>
@@ -57,9 +58,15 @@
                     <div class="col-8">
                         <div class="numbers">
                             <p class="text-xs mb-0 text-uppercase font-weight-bold">JUMLAH PENDUDUK</p>
-                            <h5 class="font-weight-bolder" id="jml_penduduk">
-                                {{ number_format($latestPopulation->jumlah_penduduk ?? 0) }}
-                            </h5>
+                            @if($userRole === 'Kecamatan')
+                                <h5 class="font-weight-bolder" id="jml_penduduk">
+                                    {{ number_format($jml_penduduk) }}
+                                </h5>
+                            @else
+                                <h5 class="font-weight-bolder" id="jml_penduduk">
+                                    {{ number_format($latestPopulation->jumlah_penduduk ?? 0) }}
+                                </h5>
+                            @endif
                             <p class="mb-0">
                                 Jiwa
                             </p>
