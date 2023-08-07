@@ -28,12 +28,12 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                <div class="form-group">
-                    <div for="filter2" class="text-white text-sm pb-2 text-bold">Kecamatan:</div>
-                        <select class="form-select" id="filter2" onchange="filterByKecamatan()" name="variable">
-                            <option selected value="kecamatan">Pilih Kecamatan</option>
+                    <div class="form-group">
+                        <div for="filter2" class="text-white text-sm pb-2 text-bold">Kecamatan:</div>
+                        <select class="form-select" id="filter2" onchange="filterByKecamatan()" @if($userRole === 'Kecamatan') disabled @endif>
+                            <option value="kecamatan">Pilih Kecamatan</option>
                             @foreach ($kecLabels as $index => $kecLabel)
-                                <option value="{{ $kecId[$index] }}">{{ $kecLabel }}</option>
+                                <option value="{{ $kecId[$index] }}" @if($userRole === 'Kecamatan' && $kecId[$index] === $loggedInUserKecamatanId) selected @endif>{{ $kecLabel }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -87,6 +87,7 @@
                 </div>
                 
             </div>
+            <a href="{{ route('map.mapdesa') }}">Klik disini untuk mengakses peta Desa</a>
             <div class="card mt-3 p-3">
                 <h5>Peta Sebaran</h5>
                 <div id="map"></div>

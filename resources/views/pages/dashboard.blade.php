@@ -21,7 +21,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div for="filter2" class="text-white text-sm pb-2 text-bold">Kecamatan:</div>
-                        <select class="form-select" id="filter2" onchange="filterByKecamatan()">
+                        <select class="form-select" id="filter2" onchange="filterByKecamatan()" @if($userRole === 'Kecamatan') disabled @endif>
                             <option value="kecamatan">Pilih Kecamatan</option>
                             @foreach ($kecLabels as $index => $kecLabel)
                                 <option value="{{ $kecId[$index] }}" @if($userRole === 'Kecamatan' && $kecId[$index] === $loggedInUserKecamatanId) selected @endif>{{ $kecLabel }}</option>
@@ -64,7 +64,7 @@
                                 </h5>
                             @else
                                 <h5 class="font-weight-bolder" id="jml_penduduk">
-                                    {{ number_format($latestPopulation->jumlah_penduduk ?? 0) }}
+                                    {{ number_format($jml_penduduk) }}
                                 </h5>
                             @endif
                             <p class="mb-0">
@@ -88,8 +88,8 @@
                         <div class="col-8">
                             <div class="numbers">
                                 <p class="text-xs mb-0 text-uppercase font-weight-bold">JUMLAH KK</p>
-                                <h5 class="font-weight-bolder">
-                                    {{ number_format($latestPopulation->jumlah_kk ?? 0) }}
+                                <h5 class="font-weight-bolder" id="jml_kk">
+                                    {{ number_format($jml_kk) }}
                                 </h5>
                                 <p class="mb-0">
                                     Kepala Keluarga
@@ -531,6 +531,7 @@ updateGeojson('all', 'all', 'all');
                 chart2.update();
 
                 document.getElementById('jml_penduduk').innerText = message.jml_penduduk;
+                document.getElementById('jml_kk').innerText = message.jml_kk;
                 document.getElementById('jmlPendudukMiskin').innerText = message.jml_pen_miskin;
                 document.getElementById('persentasePendudukMiskin').innerText = message.persentase_penduduk_miskin;
                 document.getElementById('jml_desil1').innerText = message.jml_desil1;

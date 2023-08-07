@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/map', [MapController::class, 'index'])->name('map');
     Route::get('/map/filterKecamatan', [MapController::class, 'filterKecamatan'])->name('map.filterKecamatan');
+    Route::get('/map-desa', [MapController::class, 'showMap'])->name('map.mapdesa');
 
     // user management
 	Route::get('/user-management', [UserManagementController::class, 'index'])->name('user-management');
