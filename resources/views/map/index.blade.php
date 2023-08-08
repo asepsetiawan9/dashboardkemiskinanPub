@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="pb-3 text-bold text-white">Dashboard Kemiskinan Berdasarkan Jumlah Penduduk Kabupaten Garut
-                Tahun 2022
+                Tahun 2023
             </div>
         </div>
     </div>
@@ -120,8 +120,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Fungsi untuk memperbarui tampilan geojson dengan filter tahun dan variabel
-function updateGeojson(year, variable, status) {
-    fetch(`/api/geojson?year=${year}&variable=${variable}&status=${status}`)
+function updateGeojson(year, variable, status, kecamatanSelect) {
+    fetch(`/api/geojson?year=${year}&variable=${variable}&status=${status}&kecamatanSelect=${kecamatanSelect}`)
         .then(function (response) {
             return response.json();
         })
@@ -196,7 +196,7 @@ function updateGeojson(year, variable, status) {
                             "<br><b>Kecamatan: </b>" + properties.kecamatan +
                             "<br><b>Kabupaten: </b>" + properties.nmkab +
                             "<br><b>Provinsi: </b>" + properties.nmprov +
-                            "<br><b>Nilai: </b>" + properties.nilai
+                            "<br><b>Nilai: </b>" + properties.poverty_count
                         ).openPopup();
                     });
 
@@ -248,6 +248,8 @@ var filterVarSelect = document.getElementById('filterVar');
 // Mendapatkan elemen select untuk filter tahun
 var filterYearSelect = document.getElementById('filter3');
 
+var filterKecamatanSelect = document.getElementById('filter2');
+
 var filterStatusSelect = document.getElementById('filter1');
 
 // Menambahkan event listener saat nilai filter variabel berubah
@@ -255,7 +257,8 @@ filterVarSelect.addEventListener('change', function () {
     var selectedVariable = this.value;
     var selectedYear = filterYearSelect.value;
     var selectedStatus = filterStatusSelect.value;
-    updateGeojson(selectedYear, selectedVariable, selectedStatus);
+    var selectedKecamatan = filterKecamatanSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus, selectedKecamatan);
 });
 
 // Menambahkan event listener saat nilai filter tahun berubah
@@ -263,7 +266,8 @@ filterYearSelect.addEventListener('change', function () {
     var selectedYear = this.value;
     var selectedVariable = filterVarSelect.value;
     var selectedStatus = filterStatusSelect.value;
-    updateGeojson(selectedYear, selectedVariable, selectedStatus);
+    var selectedKecamatan = filterKecamatanSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus, selectedKecamatan);
 });
 
 // Menambahkan event listener saat nilai filter tahun berubah
@@ -271,12 +275,21 @@ filterStatusSelect.addEventListener('change', function () {
     var selectedYear = filterYearSelect.value;
     var selectedVariable = filterVarSelect.value;
     var selectedStatus = filterStatusSelect.value;
-    updateGeojson(selectedYear, selectedVariable, selectedStatus);
+    var selectedKecamatan = filterKecamatanSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus, selectedKecamatan);
+});
+
+filterKecamatanSelect.addEventListener('change', function () {
+    var selectedYear = filterYearSelect.value;
+    var selectedVariable = filterVarSelect.value;
+    var selectedStatus = filterStatusSelect.value;
+    var selectedKecamatan = filterKecamatanSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus, selectedKecamatan);
 });
 
 // Memuat geojson awal saat halaman dimuat
 var geojsonLayer;
-updateGeojson('all', 'all', 'all');
+updateGeojson('all', 'all', 'all', 'kecamatan');
 
 
 </script>
@@ -361,9 +374,7 @@ updateGeojson('all', 'all', 'all');
                 chart2.data.datasets[0].data = data2;
                 chart2.update();
 
-                // document.getElementById('jml_penduduk').innerText = message.jml_penduduk;
-                // document.getElementById('jmlPendudukMiskin').innerText = message.jml_pen_miskin;
-                // document.getElementById('persentasePendudukMiskin').innerText = message.persentase_penduduk_miskin;
+                
                 document.getElementById('jml_desil1').innerText = message.jml_desil1;
                 document.getElementById('jml_desil2').innerText = message.jml_desil2;
                 document.getElementById('jml_desil3').innerText = message.jml_desil3;

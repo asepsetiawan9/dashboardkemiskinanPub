@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 use Storage;
+use DB;
 use App\Models\Population;
 use App\Models\Poverty;
 use App\Models\Kecamatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class MapController extends Controller
 {
@@ -328,7 +330,8 @@ class MapController extends Controller
             }
         }
         
-
+        // dd($nameDes,
+        // $desValue);
         $message = [
             'jml_desil1' => number_format($jml_desil1),
             'jml_desil2' => number_format($jml_desil2),
@@ -349,10 +352,82 @@ class MapController extends Controller
 
     public function showMap()
     {
-        $geojsonUrl = Storage::url('geojson/dataDesa.json');
+        $userRole = Auth::user()->role;
+        $latestYear = Poverty::max('tahun_input');
+        $loggedInUserKecamatanName = Auth::user()->city;
+        $loggedInUserKecamatanId = Kecamatan::where('name', $loggedInUserKecamatanName)->value('id');
+        $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
+        $variabels = Poverty::distinct('pendidikan_terakhir')->pluck('pendidikan_terakhir')->toArray();
+        $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $latestYear)->pluck('id_kecamatan')->toArray();
+        $kecLabels = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
+        ->where('tahun_input', $latestYear)
+            ->distinct('kecamatan.name')
+            ->pluck('kecamatan.name')
+            ->toArray();
         
-        return view('map.desa', compact('geojsonUrl'));
+            
+        // $geojsonUrl = storage_path('app/geojson/dataDesa.json');
+        return view('map.desa', compact('userRole', 'loggedInUserKecamatanName', 'loggedInUserKecamatanId', 'years', 'variabels', 'kecId', 'kecLabels', 'latestYear'));
     }
+
+    public function getGeojsonDesa(Request $request)
+{
+    // dd($request);
+    $geojsonFilePath = storage_path('app/geojson/dataDesa.json');
+
+    if (File::exists($geojsonFilePath)) {
+        $geojsonContent = File::get($geojsonFilePath);
+        $geojsonData = json_decode($geojsonContent, true);
+
+        // Jika ada parameter kecamatan yang dipilih dari request, filter data GeoJSON
+        if ($request->has('kecamatan')) {
+            $selectedKecamatan = $request->input('kecamatan');
+            $filteredFeatures = array_filter($geojsonData['features'], function ($feature) use ($selectedKecamatan) {
+                return $feature['properties']['kecamatan'] === $selectedKecamatan;
+            });
+
+            $geojsonData['features'] = array_values($filteredFeatures);
+        }
+
+        return response()->json($geojsonData);
+    } else {
+        return response()->json(['error' => 'GeoJSON file not found'], 404);
+    }
+}
+
+
+    public function updateGeojsonDesa(Request $request)
+    {
+        $geojsonFilePath = storage_path('app/geojson/dataDesa.json');
+        
+        if (File::exists($geojsonFilePath)) {
+            $geojsonContent = File::get($geojsonFilePath);
+            $geojson = json_decode($geojsonContent, true);
+
+            foreach ($geojson['features'] as &$feature) {
+                $kecamatanName = $feature['properties']['kecamatan'];
+                $desaName = $feature['properties']['desa'];
+
+                // Ambil jumlah data dari tabel 'poverty' berdasarkan nama desa
+                $povertyCount = DB::table('poverties')
+                ->join('desa', 'poverties.id_desa', '=', 'desa.id')
+                ->where('desa.name_desa', $desaName)
+                ->count();
+
+                $feature['properties']['poverty_count'] = $povertyCount;
+            }
+
+            // Simpan kembali GeoJSON yang telah diperbarui
+            File::put($geojsonFilePath, json_encode($geojson));
+
+            return response()->json(['message' => 'Properties updated in GeoJSON']);
+        } else {
+            return response()->json(['error' => 'GeoJSON file not found'], 404);
+        }
+    }
+
+
+
 
 
 

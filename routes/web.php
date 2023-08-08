@@ -56,6 +56,8 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::get('/map', [MapController::class, 'index'])->name('map');
     Route::get('/map/filterKecamatan', [MapController::class, 'filterKecamatan'])->name('map.filterKecamatan');
     Route::get('/map-desa', [MapController::class, 'showMap'])->name('map.mapdesa');
+    Route::get('/get-geojson', [MapController::class, 'getGeojsonDesa'])->name('get-geojson');
+    Route::get('/update-geojson', [MapController::class, 'updateGeojsonDesa'])->name('update-geojson');
 
     // user management
 	Route::get('/user-management', [UserManagementController::class, 'index'])->name('user-management');
