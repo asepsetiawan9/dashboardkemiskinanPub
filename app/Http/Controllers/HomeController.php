@@ -42,6 +42,7 @@ class HomeController extends Controller
             $latestPopulation = Population::where('tahun', $latestYear)->first();
             $namakecamatan = strtolower($loggedInUserKecamatanName);
             $jml_penduduk = $latestPopulation ? $latestPopulation->{$namakecamatan} : 0;
+            $jml_kk = $latestPopulation ? $latestPopulation->{"kk_${namakecamatan}"} : 0;
 
             $jml_pen_miskin = Poverty::where('tahun_input', $latestYear)->where('id_kecamatan', $loggedInUserKecamatanId)->count();
 
@@ -103,9 +104,10 @@ class HomeController extends Controller
             $desValue= '';
             
        }else{
-            $latestPopulation = Population::latest()->first();
+            $latestPopulation = Population::where('tahun', $latestYear)->first();
 
             $jml_penduduk = $latestPopulation ? $latestPopulation->jumlah_penduduk : 0;
+            $jml_kk = $latestPopulation ? $latestPopulation->jumlah_kk : 0;
 
             //jumlah  penduduk miskin tahun terakhir
             
@@ -174,8 +176,8 @@ class HomeController extends Controller
 
         $message = 'kosong';
         return view('pages.dashboard', compact('jml_penduduk', 'latestPopulation', 'jml_pen_miskin', 'persentasePendudukMiskin', 'jml_desil1', 'jml_desil2', 'jml_desil3', 'jml_desil4', 'jml_desil5','jml_desil6','jml_desil7', 'years',
-        'dataCountByYear', 'kecLabels', 'kecId', 'kecValue', 'message', 'nameDes', 'desValue', 'status', 'latestYear', 'userRole', 'loggedInUserKecamatanName', 'loggedInUserKecamatanId'
-        ));
+        'dataCountByYear', 'kecLabels', 'kecId', 'kecValue', 'message', 'nameDes', 'desValue', 'status', 'latestYear', 'userRole', 'loggedInUserKecamatanName', 'loggedInUserKecamatanId',
+        'jml_kk'));
     }
 
     public function filterKecamatan(Request $request)
@@ -185,7 +187,7 @@ class HomeController extends Controller
         $kecId = $request->input('kecId');
         $status = $request->input('status');
         $selectedYear = $request->input('year');
-
+        $userRole = Auth::user()->role;
         $kecLabel = $request->input('kecLabel');
         $kecLabel = strtolower($kecLabel);
         $kecLabel = str_replace(' ', '_', $kecLabel);
@@ -202,15 +204,33 @@ class HomeController extends Controller
 
         if ($selectedYear !== 'all') {
             $status_bantuan = $status_bantuan->where('tahun_input', $selectedYear);
+            
         }
 
         if ($kecId !== 'kecamatan') {
             $status_bantuan = $status_bantuan->where('id_kecamatan', $kecId);
+            
         }
         $status_bantuan = $status_bantuan->get();
 
-        $population = Population::where('tahun', $selectedYear)->first();
-        $jml_penduduk = $population ? $population->{$kecLabel} : 0;
+        if ($userRole === "Kecamatan") {
+            $population = Population::where('tahun', $selectedYear)->first();
+            $jml_penduduk = $population ? $population->{$kecLabel} : 0;
+            $jml_kk = $population ? $population->{"kk_${kecLabel}"} : 0;
+        }else{
+            $population = Population::where('tahun', $selectedYear)->first();
+            if ($kecId !== 'kecamatan') {
+                $jml_penduduk = $population ? $population->{$kecLabel} : 0;
+                $jml_kk = $population ? $population->{"kk_${kecLabel}"} : 0;
+            }else{
+                $jml_penduduk = $population ? $population->jumlah_penduduk : 0;
+                $jml_kk = $population ? $population->jumlah_kk : 0;
+            }
+            
+        }
+       
+        // dd($jml_kk);
+
 
         $id_desa = $status_bantuan->where('id_kecamatan', $kecId)->pluck('id_desa')->unique()->toArray();
         $jml_pen_miskin = $status_bantuan->count();
@@ -233,17 +253,23 @@ class HomeController extends Controller
 
         $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
         $dataCountByYear = [];
-        if ($status !== 'all') {
-            foreach ($years as $year) {
-                $count = Poverty::where('tahun_input', $year)->where('status_bantuan', $status)->count();
-                $dataCountByYear[] = $count;
+
+        foreach ($years as $year) {
+            $query = Poverty::where('tahun_input', $year);
+        
+            if ($status !== 'all') {
+                $query->where('status_bantuan', $status);
             }
-        }else{
-            foreach ($years as $year) {
-                $count = Poverty::where('tahun_input', $year)->count();
-                $dataCountByYear[] = $count;
+        
+            if ($kecId !== 'kecamatan') {
+                $query->where('id_kecamatan', $kecId);
             }
+          
+            $count = $query->count();
+            $dataCountByYear[] = $count;
         }
+        
+
 
         if ($kecId === "kecamatan") {
             $kecIdList = Poverty::distinct('id_kecamatan')->pluck('id_kecamatan')->toArray();
@@ -308,6 +334,7 @@ class HomeController extends Controller
         
         $message = [
             'jml_penduduk' => number_format($jml_penduduk),
+            'jml_kk' => number_format($jml_kk),
             'jml_pen_miskin' => number_format($jml_pen_miskin),
             'persentase_penduduk_miskin' => round($persentasePendudukMiskin, 2),
             'jml_desil1' => number_format($jml_desil1),

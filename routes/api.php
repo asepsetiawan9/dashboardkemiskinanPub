@@ -20,4 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 // Route::get('/geojson', [HomeController::class, 'geojson'])->name('geojson');
-Route::get('/geojson', [GeoJSONController::class, 'index'])->name('geojson');
+// Route::get('/geojson', [GeoJSONController::class, 'index'])->name('geojson');

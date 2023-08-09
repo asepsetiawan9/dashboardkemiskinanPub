@@ -21,7 +21,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div for="filter2" class="text-white text-sm pb-2 text-bold">Kecamatan:</div>
-                        <select class="form-select" id="filter2" onchange="filterByKecamatan()">
+                        <select class="form-select" id="filter2" onchange="filterByKecamatan()" @if($userRole === 'Kecamatan') disabled @endif>
                             <option value="kecamatan">Pilih Kecamatan</option>
                             @foreach ($kecLabels as $index => $kecLabel)
                                 <option value="{{ $kecId[$index] }}" @if($userRole === 'Kecamatan' && $kecId[$index] === $loggedInUserKecamatanId) selected @endif>{{ $kecLabel }}</option>
@@ -64,7 +64,7 @@
                                 </h5>
                             @else
                                 <h5 class="font-weight-bolder" id="jml_penduduk">
-                                    {{ number_format($latestPopulation->jumlah_penduduk ?? 0) }}
+                                    {{ number_format($jml_penduduk) }}
                                 </h5>
                             @endif
                             <p class="mb-0">
@@ -88,8 +88,8 @@
                         <div class="col-8">
                             <div class="numbers">
                                 <p class="text-xs mb-0 text-uppercase font-weight-bold">JUMLAH KK</p>
-                                <h5 class="font-weight-bolder">
-                                    {{ number_format($latestPopulation->jumlah_kk ?? 0) }}
+                                <h5 class="font-weight-bolder" id="jml_kk">
+                                    {{ number_format($jml_kk) }}
                                 </h5>
                                 <p class="mb-0">
                                     Kepala Keluarga
@@ -223,9 +223,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Fungsi untuk memperbarui tampilan geojson dengan filter tahun dan variabel
-function updateGeojson(year, variable, status) {
-    fetch(`/api/geojson?year=${year}&variable=${variable}&status=${status}`)
-        .then(function (response) {
+function updateGeojson(year, variable, status, kecamatanSelect) {
+    fetch(`/geojson?year=${year}&variable=${variable}&status=${status}&kecamatanSelect=${kecamatanSelect}`)        .then(function (response) {
             return response.json();
         })
         .then(function (data) {
@@ -351,6 +350,8 @@ var filterVarSelect = document.getElementById('filterVar');
 // Mendapatkan elemen select untuk filter tahun
 var filterYearSelect = document.getElementById('filter3');
 
+var filterKecamatanSelect = document.getElementById('filter2');
+
 var filterStatusSelect = document.getElementById('filter1');
 
 // Menambahkan event listener saat nilai filter variabel berubah
@@ -358,7 +359,8 @@ filterVarSelect.addEventListener('change', function () {
     var selectedVariable = this.value;
     var selectedYear = filterYearSelect.value;
     var selectedStatus = filterStatusSelect.value;
-    updateGeojson(selectedYear, selectedVariable, selectedStatus);
+    var selectedKecamatan = filterKecamatanSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus, selectedKecamatan);
 });
 
 // Menambahkan event listener saat nilai filter tahun berubah
@@ -366,7 +368,8 @@ filterYearSelect.addEventListener('change', function () {
     var selectedYear = this.value;
     var selectedVariable = filterVarSelect.value;
     var selectedStatus = filterStatusSelect.value;
-    updateGeojson(selectedYear, selectedVariable, selectedStatus);
+    var selectedKecamatan = filterKecamatanSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus, selectedKecamatan);
 });
 
 // Menambahkan event listener saat nilai filter tahun berubah
@@ -374,12 +377,21 @@ filterStatusSelect.addEventListener('change', function () {
     var selectedYear = filterYearSelect.value;
     var selectedVariable = filterVarSelect.value;
     var selectedStatus = filterStatusSelect.value;
-    updateGeojson(selectedYear, selectedVariable, selectedStatus);
+    var selectedKecamatan = filterKecamatanSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus, selectedKecamatan);
+});
+
+filterKecamatanSelect.addEventListener('change', function () {
+    var selectedYear = filterYearSelect.value;
+    var selectedVariable = filterVarSelect.value;
+    var selectedStatus = filterStatusSelect.value;
+    var selectedKecamatan = filterKecamatanSelect.value;
+    updateGeojson(selectedYear, selectedVariable, selectedStatus, selectedKecamatan);
 });
 
 // Memuat geojson awal saat halaman dimuat
 var geojsonLayer;
-updateGeojson('all', 'all', 'all');
+updateGeojson('all', 'all', 'all', 'kecamatan');
 
 
 </script>
@@ -531,6 +543,7 @@ updateGeojson('all', 'all', 'all');
                 chart2.update();
 
                 document.getElementById('jml_penduduk').innerText = message.jml_penduduk;
+                document.getElementById('jml_kk').innerText = message.jml_kk;
                 document.getElementById('jmlPendudukMiskin').innerText = message.jml_pen_miskin;
                 document.getElementById('persentasePendudukMiskin').innerText = message.persentase_penduduk_miskin;
                 document.getElementById('jml_desil1').innerText = message.jml_desil1;

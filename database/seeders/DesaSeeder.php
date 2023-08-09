@@ -948,7 +948,7 @@ class DesaSeeder extends Seeder
             ],
             [
                 "id_kecamatan" => 20,
-                "name_desa" => "Kramatwangi"
+                "name_desa" => "Karamatwangi"
             ],
             [
                 "id_kecamatan" => 20,
@@ -984,7 +984,7 @@ class DesaSeeder extends Seeder
             ],
             [
                 "id_kecamatan" => 20,
-                "name_desa" => "Sukawangi"
+                "name_desa" => "Sukawargi"
             ],
             [
                 "id_kecamatan" => 20,
