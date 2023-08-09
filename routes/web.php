@@ -32,7 +32,7 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\DataManagementController;
 use App\Http\Controllers\AssistanceController;
 use App\Http\Controllers\RoleController;
-
+use App\Http\Controllers\GeoJSONController;
 
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
     
@@ -58,6 +58,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/map-desa', [MapController::class, 'showMap'])->name('map.mapdesa');
     Route::get('/get-geojson', [MapController::class, 'getGeojsonDesa'])->name('get-geojson');
     Route::get('/update-geojson', [MapController::class, 'updateGeojsonDesa'])->name('update-geojson');
+    Route::get('/geojson', [GeoJSONController::class, 'index'])->name('geojson');
 
     // user management
 	Route::get('/user-management', [UserManagementController::class, 'index'])->name('user-management');
