@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Facades\Auth;
+@endphp
 <div class="col-md-6">
     <div class="form-group">
         <label for="tahun_input">TAHUN INPUT</label>
@@ -77,27 +80,34 @@
             @error('alamat') <p class="text-danger text-xs pt-1">{{ $message }}</p> @enderror
         </div>
     </div>
+
+
     
     <div class="col-md-4 d-flex flex-column">
         <div class="form-group">
             <label for="kecamatan2">Kecamatan</label>
-            <select class="form-select" id="kecamatan2">
+            <select class="form-select" id="kecamatan2" name="id_kecamatan" @if ($userRole === 'Kecamatan') disabled @endif>
                 <option selected value="">-- Pilih kecamatan --</option>
-                <input type="hidden" id="kecamatan" name="kecamatan" value="">
-                <input type="hidden" id="id_kecamatan" name="id_kecamatan" value="">
+                @foreach ($kecamatan as $kec)
+                    <option value="{{ $kec->id }}" @if ($selectedKecamatanId == $kec->id) selected @endif>{{ $kec->name }}</option>
+                @endforeach
             </select>
+            
             @error('id_kecamatan') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
         </div>
+        
+        @if($userRole === 'Kecamatan')
+            <input type="hidden" name="id_kecamatan" value="{{ $selectedKecamatanId }}">
+        @endif
+
         <div class="form-group">
             <label for="kelurahan">Desa</label>
             <select name="id_desa" class="form-select" id="kelurahan">
                 <option selected value="">-- Pilih Desa --</option>
-                <!-- load kelurahan/desa-->
             </select>
             @error('id_desa') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
         </div>
     </div>
-</div>
 
 <div class="col-md-6">
     <div class="form-group">
@@ -129,7 +139,7 @@
     @error('status') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
 </div>
 
-
+</div>
 @push('js')
 <script>
     $(document).ready(function () {
@@ -140,33 +150,20 @@
     });
 
 </script>
-@endpush
-
-
-
-@push('js')
 <script>
     var kecamatanSelect = document.getElementById('kecamatan2');
     var kelurahanSelect = document.getElementById('kelurahan');
-    var kecamatanIdInput = document.getElementById('id_kecamatan');
-    var kecamatanNameInput = document.getElementById('kecamatan');
-
+    
+    // Menambahkan event listener saat nilai kecamatan berubah
     kecamatanSelect.addEventListener('change', function () {
         kelurahanSelect.innerHTML = '<option selected value="">-- Pilih Desa --</option>';
-
+        
         var selectedKecamatan = kecamatanSelect.value;
-        var selectedKecamatanName = kecamatanSelect.options[kecamatanSelect.selectedIndex].text;
-
-        kecamatanIdInput.value = selectedKecamatan;
-        kecamatanNameInput.value = selectedKecamatanName;
-
+        
         if (selectedKecamatan) {
-            // Fetch desa berdasarkan kecamatan yang dipilih
             fetch(`/poverty/getDesa/${selectedKecamatan}`)
                 .then(response => response.json())
                 .then(data => {
-                    kelurahanSelect.innerHTML = '<option selected value="">-- Pilih Desa --</option>';
-
                     // Menambahkan opsi desa berdasarkan data yang diterima
                     data.forEach(desa => {
                         var option = document.createElement('option');
@@ -180,24 +177,11 @@
                 });
         }
     });
-
-    // Mengambil data semua kecamatan dari database
-    fetch('/poverty/getKecamatan')
-        .then(response => response.json())
-        .then(data => {
-            kecamatanSelect.innerHTML = '<option selected value="">-- Pilih kecamatan --</option>';
-
-            // Menambahkan opsi kecamatan berdasarkan data yang diterima
-            data.data.forEach(kecamatan => {
-
-                var option = document.createElement('option');
-                option.value = kecamatan.id;
-                option.text = kecamatan.name;
-                kecamatanSelect.add(option);
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    
+    // Trigger event saat halaman dimuat untuk memilih kecamatan secara otomatis
+    var event = new Event('change');
+    kecamatanSelect.dispatchEvent(event);
 </script>
+
+
 @endpush

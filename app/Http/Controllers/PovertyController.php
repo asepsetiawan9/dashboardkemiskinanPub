@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Models\Desa;
-use App\Models\kecamatan;
+use App\Models\Kecamatan;
 use App\Models\Poverty;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Storage;
 use Str;
 use View;
@@ -21,8 +22,20 @@ class PovertyController extends Controller
     }
     public function index()
     {
-        $povertys = Poverty::with('kecamatan', 'desa')->paginate(10);
-        $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
+        $userRole = Auth::user()->role;
+        if ($userRole == "Admin") {
+            $povertys = Poverty::with('kecamatan', 'desa')->paginate(10);
+            $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
+        } else {
+            $userCity = Auth::user()->city; // Assuming 'city' is the field name in the User model
+            $kecamatan = Kecamatan::where('name', $userCity)->first();
+            $selectedKecamatan = $kecamatan->id;
+            $povertys = Poverty::with('kecamatan', 'desa')->where('id_kecamatan', $selectedKecamatan)->paginate(10);
+           
+            $years = Poverty::distinct('tahun_input')->pluck('tahun_input')->toArray();
+            
+        }
+        
 
         return view('poverty.index', compact('povertys', 'years'));
     }
@@ -81,13 +94,39 @@ class PovertyController extends Controller
     }
 
 
-    public function create()
-    {
-        return view('poverty.create');
+    public function create() {
+        $kecamatan = Kecamatan::all();
+        $selectedKecamatanId = null;
+    
+        if (Auth::check() && Auth::user()->role === 'Kecamatan' && Auth::user()->city) {
+            $selectedKecamatan = Auth::user()->city;
+            $userRole = Auth::user()->role;
+            $selectedKecamatanId = Kecamatan::where('name', $selectedKecamatan)->value('id');
+            // dd($selectedKecamatanId);
+        }else{
+            $userRole = '';
+        }
+    
+        return view('poverty.create', compact('kecamatan', 'selectedKecamatanId', 'userRole'));
     }
+
+    public function getDesa($id_kecamatan)
+    {
+        $kecamatan = Kecamatan::find($id_kecamatan);
+
+        if (!$kecamatan) {
+            return response()->json(['error' => 'Kecamatan tidak ditemukan'], 404);
+        }
+
+        $desa = Desa::where('id_kecamatan', $id_kecamatan)->get();
+
+        return response()->json($desa);
+    }
+
+    
     public function store(Request $request)
     {
-        //   dd($request);
+         dd($request);
         $validatedData = $request->validate([
             'nik' => 'required',
             'nama' => 'required',
@@ -156,12 +195,33 @@ class PovertyController extends Controller
     }
     public function edit($id)
     {
+        $kecamatan = Kecamatan::all();
+        $selectedKecamatanId = null;
+
+        if (Auth::check() && Auth::user()->role === 'Kecamatan' && Auth::user()->city) {
+            $selectedKecamatan = Auth::user()->city;
+            $userRole = Auth::user()->role;
+            $selectedKecamatanId = Kecamatan::where('name', $selectedKecamatan)->value('id');
+            // dd($selectedKecamatanId);
+        }else{
+            $userRole = '';
+        }
+
+        if (Auth::check() && Auth::user()->role === 'Kecamatan' && Auth::user()->city) {
+            $selectedKecamatan = Auth::user()->city;
+            $userRole = Auth::user()->role;
+            $selectedKecamatanId = Kecamatan::where('name', $selectedKecamatan)->value('id');
+            // dd($selectedKecamatanId);
+        }else{
+            $userRole = '';
+        }
+
         $poverty = Poverty::find($id);
         if (!$poverty) {
             return redirect('poverty')->with('error', 'Pengguna tidak ditemukan.');
         }
 
-        return view('poverty.edit', compact('poverty'));
+        return view('poverty.edit', compact('poverty', 'kecamatan', 'selectedKecamatanId', 'userRole'));
     }
 
     public function update(Request $request, $id)
@@ -289,25 +349,27 @@ class PovertyController extends Controller
 
     public function getKecamatan()
     {
-        $kecamatan = kecamatan::all();
+        $kecamatan = Kecamatan::all();
 
         return response()->json([
             'status' => 'success',
             'data' => $kecamatan
         ]);
     }
-    public function getDesa($id_kecamatan)
-    {
-        $kecamatan = Kecamatan::find($id_kecamatan);
+    // public function getDesa($id_kecamatan)
+    // {
+    //     $kecamatan = Kecamatan::find($id_kecamatan);
 
-        if (!$kecamatan) {
-            return response()->json(['error' => 'Kecamatan tidak ditemukan'], 404);
-        }
+    //     if (!$kecamatan) {
+    //         return response()->json(['error' => 'Kecamatan tidak ditemukan'], 404);
+    //     }
 
-        $desa = Desa::where('id_kecamatan', $id_kecamatan)->get();
+    //     $desa = Desa::where('id_kecamatan', $id_kecamatan)->get();
 
-        return response()->json($desa);
-    }
+    //     return response()->json($desa);
+    // }
+
+    
 
 
 }

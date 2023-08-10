@@ -45,20 +45,22 @@
                         </div>
 
                         <div class="col-md-6 form-group">
-                            <label for="kecamatan">KECAMATAN</label>
-                            <select class="form-select" id="kecamatan">
-                                <option selected value="">-- Pilih Kecamatan --</option>
-                                <input type="hidden" id="kecamatan_name" name="kecamatan_name" value="">
-                                <input type="hidden" id="kecamatan_id" name="kecamatan_id" value="">
-                                <!-- load kecamatan -->
+                            <label for="kecamatan2">Kecamatan</label>
+                            <select class="form-select" id="kecamatan2" name="id_kecamatan" @if ($userRole === 'Kecamatan') disabled @endif>
+                                <option selected value="">-- Pilih kecamatan --</option>
+                                
+                                @foreach ($kecamatan as $kec)
+                                    <option value="{{ $kec->id }}" data-name="{{ $kec->name }}" @if ($selectedKecamatanId == $kec->id) selected @endif>{{ $kec->name }}</option>
+                                @endforeach
                             </select>
+                            <input type="hidden" id="selectedKecamatanName" name="city" value="{{ $selectedKecamatanName }}">
                         </div>
-
+                        
+    
                         <div class="col-md-6 form-group">
                             <label for="kelurahan">Desa</label>
                             <select name="desa" class="form-select" id="kelurahan">
                                 <option selected value="">-- Pilih Desa --</option>
-                                <!-- load kelurahan/desa-->
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -94,32 +96,29 @@
 
 @push('js')
 <script>
-    var kecamatanSelect = document.getElementById('kecamatan');
+    var kecamatanSelect = document.getElementById('kecamatan2');
     var kelurahanSelect = document.getElementById('kelurahan');
-    var kecamatanIdInput = document.getElementById('kecamatan_id');
-    var kecamatanNameInput = document.getElementById('kecamatan_name');
-
-    kecamatanSelect.addEventListener('change', function() {
+    var selectedKecamatanNameInput = document.getElementById('selectedKecamatanName');
+    
+    // Menambahkan event listener saat nilai kecamatan berubah
+    kecamatanSelect.addEventListener('change', function () {
         kelurahanSelect.innerHTML = '<option selected value="">-- Pilih Desa --</option>';
+        
+        var selectedOption = kecamatanSelect.options[kecamatanSelect.selectedIndex];
+        var selectedKecamatanId = selectedOption.value;
+        var selectedKecamatanName = selectedOption.getAttribute('data-name');
+        
+        selectedKecamatanNameInput.value = selectedKecamatanName;
 
-        var selectedKecamatan = kecamatanSelect.value;
-        var selectedKecamatanName = kecamatanSelect.options[kecamatanSelect.selectedIndex].text;
-
-        kecamatanIdInput.value = selectedKecamatan;
-        kecamatanNameInput.value = selectedKecamatanName;
-
-        if (selectedKecamatan) {
-            // fetch desa
-            fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${selectedKecamatan}.json`)
+        if (selectedKecamatanId) {
+            fetch(`/poverty/getDesa/${selectedKecamatanId}`)
                 .then(response => response.json())
-                .then(villages => {
-                    kelurahanSelect.innerHTML = '<option selected value="">-- Pilih Desa --</option>';
-
-                    // list kelurahan/desa
-                    villages.forEach(village => {
+                .then(data => {
+                    // Menambahkan opsi desa berdasarkan data yang diterima
+                    data.forEach(desa => {
                         var option = document.createElement('option');
-                        option.value = village.name;
-                        option.text = village.name;
+                        option.value = desa.id;
+                        option.text = desa.name_desa;
                         kelurahanSelect.add(option);
                     });
                 })
@@ -128,22 +127,9 @@
                 });
         }
     });
-
-    // ambil data smua kecamatan grt
-    fetch('https://www.emsifa.com/api-wilayah-indonesia/api/districts/3205.json')
-        .then(response => response.json())
-        .then(districts => {
-            kecamatanSelect.innerHTML = '<option selected value="">-- Pilih Kecamatan --</option>';
-
-            districts.forEach(district => {
-                var option = document.createElement('option');
-                option.value = district.id;
-                option.text = district.name;
-                kecamatanSelect.add(option);
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    
+    // Trigger event saat halaman dimuat untuk memilih kecamatan secara otomatis
+    var event = new Event('change');
+    kecamatanSelect.dispatchEvent(event);
 </script>
 @endpush
