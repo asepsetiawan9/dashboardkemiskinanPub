@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Facades\Auth;
+@endphp
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
@@ -7,20 +10,33 @@
         <h5 class="text-white">Data Pengguna</h5>
         <div class="row">
             <div class="col-md-4">
-                <div class="form-group ">
-                    <label for="filter1" class="text-white text-sm pb-2 font-weight-bold">Tampilkan Berdasarkan:</label>
-                    <select class="form-select" id="filter1">
-                        <option selected value="semua">Semua Data</option>
-                    </select>
-                </div>
+                
+                {{-- @if (Auth::user()->role === 'Kecamatan') --}}
+                    <div class="form-group">
+                        <label for="filter1" class="text-white text-sm pb-2 font-weight-bold">Tampilkan Berdasarkan:</label>
+                        <select class="form-select" id="filter1" @if ( Auth::user()->role === 'Kecamatan') disabled @endif>
+                            @if ( Auth::user()->role === 'Kecamatan') <option selected value="{{ Auth::user()->city }}" >{{ Auth::user()->city }}</option>
+                            
+                            @else
+                                <option value="semua">Pilih Kecamatan</option>
+                            @endif
+                            
+                            @foreach ($nameKecamatan as $kec)
+                                <option value="{{ $kec->name }}">{{ $kec->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                {{-- @endif --}}
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="filter2" class="text-white text-sm pb-2 font-weight-bold">Jenis Pengguna:</label>
                     <select class="form-select" id="filter2">
-                        <option selected value="semua">Semua</option>
-                        <option value="kec">Admin Kecamatan</option>
-                        <option value="des">Admin Desa</option>
+                        @if (Auth::user()->role === 'Admin')  
+                            <option selected value="semua">Semua</option>
+                        @endif
+                        <option value="Kecamatan">Admin Kecamatan</option>
+                        <option value="Desa">Admin Desa</option>
                     </select>
                 </div>
             </div>
@@ -119,7 +135,7 @@
 @endpush
 
 @push('js')
-<script>
+{{-- <script>
 fetch('https://www.emsifa.com/api-wilayah-indonesia/api/districts/3205.json')
     .then(response => response.json())
     .then(data => {
@@ -138,5 +154,5 @@ fetch('https://www.emsifa.com/api-wilayah-indonesia/api/districts/3205.json')
     .catch(error => {
         console.error('Error:', error);
     });
-</script>
+</script> --}}
 @endpush
