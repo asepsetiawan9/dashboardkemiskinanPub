@@ -50,7 +50,7 @@
             </li>
             @endcan
 
-            @can('role-list')
+            {{-- @can('role-list') --}}
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'roles') == true ? 'active' : '' }}"
                     href="{{ route('page', ['page' => 'roles']) }}">
@@ -61,7 +61,7 @@
                     <span class="nav-link-text ms-1">Role Pengguna</span>
                 </a>
             </li>
-            @endcan
+            {{-- @endcan --}}
             @can('population-list')
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'population-data') == true ? 'active' : '' }}"

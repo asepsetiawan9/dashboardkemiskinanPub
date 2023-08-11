@@ -12,11 +12,17 @@ class DataManagementImport implements ToModel, WithHeadingRow
      * @param array $row
      * @return \Illuminate\Database\Eloquent\Model|null
      */
+    private $tahun;
+
+    public function __construct($tahun)
+    {
+        $this->tahun = $tahun;
+    }
     public function model(array $row)
     {
         $status_bantuan = "1";
         $row = array_map('strtoupper', $row);
-        //  dd($row);
+         
 
         if ($row['kepesertaan_dtks'] === 'YA' ||
             $row['penerima_bpnt'] === 'YA' ||
@@ -63,7 +69,7 @@ class DataManagementImport implements ToModel, WithHeadingRow
             'dtks' => $row['kepesertaan_dtks'],
             'verifikasi' => $row['verifikasi_lapangan'],
             'penghasilan_perbulan' => $row['pendapatan'],
-            'tahun_input' => 2023,    
+            'tahun_input' => $this->tahun,    
             'status_bantuan' => $status_bantuan,
         ]);
     }
