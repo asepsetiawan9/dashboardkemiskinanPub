@@ -34,9 +34,10 @@ class DataManagementController extends Controller
         //temporary file
         $path = $file->storeAs('public/excel/',$nama_file);
 
-        // import data
-        $import = Excel::import(new DataManagementImport(), storage_path('app/public/excel/'.$nama_file));
-
+        $tahun = $request->tahun;
+        // Import data dengan menambahkan tahun ke dalam data
+        $import = Excel::import(new DataManagementImport($tahun), storage_path('app/public/excel/' . $nama_file));
+    
         //remove from server
         Storage::delete($path);
 
