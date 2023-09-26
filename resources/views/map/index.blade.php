@@ -186,7 +186,7 @@ function updateGeojson(year, variable, status, kecamatanSelect) {
                         
                         var statusMendapat = properties.status === "2" ? 'Sudah mendapat Bantuan' : 'Belum Mendapat Bantuan';
                         var status = properties.status !== null ? statusMendapat : 'Semua Status Bantuan';
-                        var desa = properties.desa !== null ? desa : 'Semua Desa';
+                        var desa = properties.desa !== undefined ? properties.desa : '-';
                         var tahun = properties.tahun !== null ? properties.tahun : {{$latestYear}};
                         var variabel = properties.variabel !== 'all' ? properties.variabel : 'Semua Variabel';
                         variabel = properties.variabel === null ? 'TIDAK BERSEKOLAH' : variabel;
@@ -194,7 +194,7 @@ function updateGeojson(year, variable, status, kecamatanSelect) {
                         layer.bindPopup(
                             "<b>Tahun: </b>" + tahun +
                             "<br><b>Status Bantuan: </b>" + status +
-                            "<br><b>Desa: </b>" + properties.desa +
+                            "<br><b>Desa: </b>" + desa +
                             "<br><b>Kecamatan: </b>" + properties.kecamatan +
                             "<br><b>Kabupaten: </b>" + properties.nmkab +
                             "<br><b>Provinsi: </b>" + properties.nmprov +
