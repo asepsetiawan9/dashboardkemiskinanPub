@@ -291,10 +291,12 @@ function updateGeojson(year, variable, status, kecamatanSelect) {
                         var tahun = properties.tahun !== null ? properties.tahun : {{$latestYear}};
                         var variabel = properties.variabel !== 'all' ? properties.variabel : 'Semua Variabel';
                         variabel = properties.variabel === null ? 'TIDAK BERSEKOLAH' : variabel;
+                        var desa = properties.desa === undefined ? '-' : properties.desa;
 
                         layer.bindPopup(
                             "<b>Tahun: </b>" + tahun +
                             "<br><b>Status Bantuan: </b>" + status +
+                            "<br><b>Desa: </b>" + desa +
                             "<br><b>Kecamatan: </b>" + properties.kecamatan +
                             "<br><b>Kabupaten: </b>" + properties.nmkab +
                             "<br><b>Provinsi: </b>" + properties.nmprov +

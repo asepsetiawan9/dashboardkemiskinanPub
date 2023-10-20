@@ -119,9 +119,10 @@
                     onEachFeature: function (feature, layer) {
                         var properties = feature.properties;
                         var tahun = properties.tahun !== null ? properties.tahun : 'Tahun Tidak Tersedia';
+                        var desa = properties.desa === undefined ? '-' : properties.desa;
                         var popupContent =
                             "<b>Tahun: </b>" + tahun +
-                            "<br><b>Desa: </b>" + properties.desa +
+                            "<br><b>Desa: </b>" + desa +
                             "<br><b>Kecamatan: </b>" + properties.kecamatan +
                             "<br><b>Kabupaten: </b>" + properties.kabkot +
                             "<br><b>Provinsi: </b>" + properties.provinsi +

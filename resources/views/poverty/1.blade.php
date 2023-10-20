@@ -55,8 +55,8 @@
     <label for="jk">JENIS KELAMIN</label>
     <select name="jk" class="form-select" id="jk">
         <option value="">Pilih Jenis</option>
-        <option value="laki" @if(isset($poverty) && $poverty->jk === 'laki') selected @endif>Laki-Laki</option>
-        <option value="perempuan" @if(isset($poverty) && $poverty->jk === 'perempuan') selected @endif>Perempuan
+        <option value="laki" @if(isset($poverty) && $poverty->jk === 'LAKI-LAKI') selected @endif>Laki-Laki</option>
+        <option value="perempuan" @if(isset($poverty) && $poverty->jk === 'PEREMPUAN') selected @endif>Perempuan
         </option>
     </select>
     @error('jk') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
@@ -100,6 +100,7 @@
             <input type="hidden" name="id_kecamatan" value="{{ $selectedKecamatanId }}">
         @endif
 
+        @if($selectedDesaId === null)
         <div class="form-group">
             <label for="kelurahan">Desa</label>
             <select name="id_desa" class="form-select" id="kelurahan">
@@ -107,13 +108,25 @@
             </select>
             @error('id_desa') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
         </div>
+        @else
+        <div class="form-group">
+            <label for="kelurahan">Desa edit</label>
+            <select name="id_desa" class="form-select" >
+                <option selected value="">-- Pilih Desa --</option>
+                @foreach ($desa as $des)
+                    <option value="{{ $des->id }}" @if ($selectedDesaId == $des->id) selected @endif>{{ $des->name_desa }}</option>
+                @endforeach
+            </select>
+            @error('id_desa') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+        </div>
+        @endif
     </div>
 
 <div class="col-md-6">
     <div class="form-group">
         <label for="status_kawin">Status Kawin</label>
         <select name="status_kawin" class="form-select" id="status_kawin">
-            <option selected value="">Pilih Usia</option>
+            <option selected value="">Pilih Status Kawin</option>
             <option value="KAWIN" @if(isset($poverty) && $poverty->status_kawin === 'KAWIN') selected @endif>KAWIN</option>
             <option value="BELUM KAWIN" @if(isset($poverty) && $poverty->status_kawin === 'BELUM KAWIN') selected @endif>BELUM KAWIN</option>
             <option value="CERAI HIDUP" @if(isset($poverty) && $poverty->status_kawin === 'CERAI HIDUP') selected @endif>CERAI HIDUP</option>
