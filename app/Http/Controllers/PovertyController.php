@@ -97,6 +97,7 @@ class PovertyController extends Controller
     public function create() {
         $kecamatan = Kecamatan::all();
         $selectedKecamatanId = null;
+        $selectedDesaId = null;
     
         if (Auth::check() && Auth::user()->role === 'Kecamatan' && Auth::user()->city) {
             $selectedKecamatan = Auth::user()->city;
@@ -107,7 +108,7 @@ class PovertyController extends Controller
             $userRole = '';
         }
     
-        return view('poverty.create', compact('kecamatan', 'selectedKecamatanId', 'userRole'));
+        return view('poverty.create', compact('kecamatan', 'selectedKecamatanId', 'userRole', 'selectedDesaId'));
     }
 
     public function getDesa($id_kecamatan)
@@ -126,7 +127,7 @@ class PovertyController extends Controller
     
     public function store(Request $request)
     {
-         dd($request);
+        //  dd($request);
         $validatedData = $request->validate([
             'nik' => 'required',
             'nama' => 'required',
@@ -196,37 +197,30 @@ class PovertyController extends Controller
     public function edit($id)
     {
         $kecamatan = Kecamatan::all();
-        $selectedKecamatanId = null;
+        $desa = Desa::all(); // Inisialisasi koleksi kosong untuk opsi desa
 
         if (Auth::check() && Auth::user()->role === 'Kecamatan' && Auth::user()->city) {
             $selectedKecamatan = Auth::user()->city;
             $userRole = Auth::user()->role;
             $selectedKecamatanId = Kecamatan::where('name', $selectedKecamatan)->value('id');
-            // dd($selectedKecamatanId);
-        }else{
-            $userRole = '';
-        }
-
-        if (Auth::check() && Auth::user()->role === 'Kecamatan' && Auth::user()->city) {
-            $selectedKecamatan = Auth::user()->city;
-            $userRole = Auth::user()->role;
-            $selectedKecamatanId = Kecamatan::where('name', $selectedKecamatan)->value('id');
-            // dd($selectedKecamatanId);
-        }else{
+            $desa = Desa::where('id_kecamatan', $selectedKecamatanId)->get();
+        } else {
             $userRole = '';
         }
 
         $poverty = Poverty::find($id);
+        $selectedKecamatanId = $poverty->id_kecamatan;
+        $selectedDesaId = $poverty->id_desa;
+
         if (!$poverty) {
-            return redirect('poverty')->with('error', 'Pengguna tidak ditemukan.');
+            return redirect('poverty')->with('error', 'Data kemiskinan tidak ditemukan.');
         }
 
-        return view('poverty.edit', compact('poverty', 'kecamatan', 'selectedKecamatanId', 'userRole'));
+        return view('poverty.edit', compact('poverty', 'kecamatan', 'desa', 'selectedKecamatanId', 'selectedDesaId', 'userRole'));
     }
 
     public function update(Request $request, $id)
     {
-         
         $validatedData = $request->validate([
             'nik' => 'required',
             'nama' => 'required',
