@@ -145,17 +145,19 @@ class HomeController extends Controller
             }
             //ambil semua tahun
             $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $latestYear)->pluck('id_kecamatan')->toArray();
-            $kecLabels = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
-                ->where('tahun_input', $latestYear)
-                ->distinct('kecamatan.name')
-                ->pluck('kecamatan.name')
-                ->toArray();
 
-            //ambil semua nilai pertahun
+            $kecLabels = Kecamatan::pluck('name', 'id')->toArray();
+
+            // Inisialisasi array untuk menyimpan nilai jumlah penduduk miskin untuk setiap kecamatan
             $kecValue = [];
-            foreach ($kecId as $kec) {
-                $count = Poverty::where('id_kecamatan', $kec)->where('tahun_input', $latestYear)->count();
-                $kecValue[] = $count;
+
+            // Iterasi melalui setiap kecamatan dan hitung jumlah penduduk miskin pada tahun input terbaru
+            foreach ($kecLabels as $kecId => $kecamatan) {
+                $count = Poverty::where('id_kecamatan', $kecId)
+                                ->where('tahun_input', $latestYear)
+                                ->count();
+                // Masukkan jumlah penduduk miskin ke dalam array kecValue
+                $kecValue[$kecId] = $count;
             }
             
             // dd($kecId, $kecValue);
@@ -165,18 +167,28 @@ class HomeController extends Controller
             ->pluck('kecamatan.name')
             ->toArray();
 
+            // dd($kecLabels, $kecValue);
+
             //ambil semua nilai pertahun
-            $desValue = [];
-            foreach ($kecId as $kec) {
-                $count = Poverty::where('id_kecamatan', $kec)->count();
-                $kecValue[] = $count;
-            }
+            // $desValue = [];
+            // foreach ($kecId as $kec) {
+            //     $count = Poverty::where('id_kecamatan', $kec)->count();
+            //     $kecValue[] = $count;
+            // }
+
+            $labels2 = array_values($kecLabels);
+            $data2 = array_values($kecValue);
+            // dd($kecValue, $);
+
+            $labelsJSON = json_encode($labels2);
+            $dataJSON = json_encode($data2);
+
         }
         
 
         $message = 'kosong';
-        return view('pages.dashboard', compact('jml_penduduk', 'latestPopulation', 'jml_pen_miskin', 'persentasePendudukMiskin', 'jml_desil1', 'jml_desil2', 'jml_desil3', 'jml_desil4', 'jml_desil5','jml_desil6','jml_desil7', 'years',
-        'dataCountByYear', 'kecLabels', 'kecId', 'kecValue', 'message', 'nameDes', 'desValue', 'status', 'latestYear', 'userRole', 'loggedInUserKecamatanName', 'loggedInUserKecamatanId',
+        return view('pages.dashboard', compact('labelsJSON','dataJSON', 'jml_penduduk', 'latestPopulation', 'jml_pen_miskin', 'persentasePendudukMiskin', 'jml_desil1', 'jml_desil2', 'jml_desil3', 'jml_desil4', 'jml_desil5','jml_desil6','jml_desil7', 'years',
+        'dataCountByYear', 'kecLabels', 'kecId', 'kecValue', 'message', 'nameDes', 'status', 'latestYear', 'userRole', 'loggedInUserKecamatanName', 'loggedInUserKecamatanId',
         'jml_kk'));
     }
 
