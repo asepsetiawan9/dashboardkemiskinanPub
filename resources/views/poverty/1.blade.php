@@ -110,7 +110,7 @@
         </div>
         @else
         <div class="form-group">
-            <label for="kelurahan">Desa edit</label>
+            <label for="kelurahan">Desa</label>
             <select name="id_desa" class="form-select" >
                 <option selected value="">-- Pilih Desa --</option>
                 @foreach ($desa as $des)

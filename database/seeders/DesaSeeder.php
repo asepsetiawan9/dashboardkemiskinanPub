@@ -1746,6 +1746,30 @@ class DesaSeeder extends Seeder
                 "id_kecamatan" => 42,
                 "name_desa" => "Tenjonagara"
             ],
+            [
+                "id_kecamatan" => 2,
+                "name_desa" => "Sucikaler"
+            ],
+            [
+                "id_kecamatan" => 5,
+                "name_desa" => "Jayawaras"
+            ],
+            [
+                "id_kecamatan" => 5,
+                "name_desa" => "Pataruman"
+            ],
+            [
+                "id_kecamatan" => 5,
+                "name_desa" => "Sukagalih"
+            ],
+            [
+                "id_kecamatan" => 5,
+                "name_desa" => "Sukajaya"
+            ],
+            [
+                "id_kecamatan" => 5,
+                "name_desa" => "Sukakarya"
+            ],
         ];
 
         DB::table('desa')->insert($desa);

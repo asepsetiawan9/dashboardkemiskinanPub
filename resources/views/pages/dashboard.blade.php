@@ -23,9 +23,9 @@
                         <div for="filter2" class="text-white text-sm pb-2 text-bold">Kecamatan:</div>
                         <select class="form-select" id="filter2" onchange="filterByKecamatan()" @if($userRole === 'Kecamatan') disabled @endif>
                             <option value="kecamatan">Pilih Kecamatan</option>
-                            @foreach ($kecLabels as $index => $kecLabel)
-                                <option value="{{ $kecId[$index] }}" @if($userRole === 'Kecamatan' && $kecId[$index] === $loggedInUserKecamatanId) selected @endif>{{ $kecLabel }}</option>
-                            @endforeach
+                                @foreach ($kecLabels as $id => $kecLabel)
+                                    <option value="{{ $id }}" @if($userRole === 'Kecamatan' && $id === $loggedInUserKecamatanId) selected @endif>{{ $kecLabel }}</option>
+                                @endforeach
                         </select>
                     </div>
                 </div>
@@ -408,10 +408,12 @@ updateGeojson('all', 'all', 'all', 'kecamatan');
     const ctx2 = document.getElementById('horizonChart').getContext('2d');
     let chart1, chart2;
     let labels = <?php echo json_encode($years); ?>;
-    let labels2 = <?php echo json_encode($nameDes); ?>;
+    // let labels2 = <?php echo json_encode($nameDes); ?>;
     let data1 = <?php echo json_encode($dataCountByYear); ?>;
-    let data2 = <?php echo json_encode($kecValue); ?>;
-
+    // let data2 = <?php echo json_encode($kecValue); ?>;
+    let labels2 = <?php echo $labelsJSON; ?>;
+    let data2 = <?php echo $dataJSON; ?>;
+    // console.log(typeof labels2);
     function createChart1(labels, data) {
         chart1 = new Chart(ctx1, {
             type: 'bar',
