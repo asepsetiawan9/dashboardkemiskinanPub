@@ -537,6 +537,7 @@ updateGeojson('all', 'all', 'all', 'kecamatan');
                 labels2 = message.nameDes;
                 data1 = message.dataCountByYear;
                 data2 = message.desValue;
+                console.log(labels2);
 
                 chart1.data.labels = labels;
                 chart1.data.datasets[0].data = data1;
