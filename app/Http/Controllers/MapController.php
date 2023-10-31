@@ -280,10 +280,12 @@ class MapController extends Controller
                 }
             }
         } else {
+            
             if ($selectedVar !== 'all') {
-                $nameDes = Poverty::join('desa', 'poverties.id_desa', '=', 'desa.id')->when($status !== 'all', function ($query) use ($status) {
-                    return $query->where('status_bantuan', $status);
-                })
+                $nameDes = Poverty::join('desa', 'poverties.id_desa', '=', 'desa.id')
+                // ->when($status !== 'all', function ($query) use ($status) {
+                //     return $query->where('status_bantuan', $status);
+                // })
                     ->where('poverties.id_kecamatan', $kecId)
                     ->distinct('desa.name_desa')
                     ->pluck('desa.name_desa')
@@ -302,15 +304,13 @@ class MapController extends Controller
                 }
 
                 
-
-                
             } else {
                 $nameDes = Poverty::join('desa', 'poverties.id_desa', '=', 'desa.id')
                     ->where('poverties.id_kecamatan', $kecId)
-                    ->when($status !== 'all', function ($query) use ($status) {
-                        return $query->where('poverties.status_bantuan', $status);
-                    })
-                    ->where('tahun_input', $selectedYear)
+                    // ->when($status !== 'all', function ($query) use ($status) {
+                    //     return $query->where('poverties.status_bantuan', $status);
+                    // })
+                    // ->where('tahun_input', $selectedYear)
                     ->distinct('desa.name_desa')
                     ->pluck('desa.name_desa')
                     ->toArray();

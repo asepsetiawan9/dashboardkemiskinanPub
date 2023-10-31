@@ -307,10 +307,10 @@ class HomeController extends Controller
         } else {
             $nameDes = Poverty::join('desa', 'poverties.id_desa', '=', 'desa.id')
                 ->where('poverties.id_kecamatan', $kecId)
-                ->when($status !== 'all', function ($query) use ($status) {
-                    return $query->where('poverties.status_bantuan', $status);
-                })
-                ->where('tahun_input', $selectedYear)
+                // ->when($status !== 'all', function ($query) use ($status) {
+                //     return $query->where('poverties.status_bantuan', $status);
+                // })
+                // ->where('tahun_input', $selectedYear)
                 ->distinct('desa.name_desa')
                 ->pluck('desa.name_desa')
                 ->toArray();
