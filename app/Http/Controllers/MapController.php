@@ -85,12 +85,9 @@ class MapController extends Controller
             $dataCountByYear[] = $count;
         }
         //ambil semua tahun
-        $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $latestYear)->pluck('id_kecamatan')->toArray();
-        $kecLabels = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
-            ->where('tahun_input', $latestYear)
-            ->distinct('kecamatan.name')
-            ->pluck('kecamatan.name')
-            ->toArray();
+        
+        $kecLabels = Kecamatan::pluck('name', 'id')->toArray();
+
         if ($userRole === "Kecamatan") {
             $id_desa = Poverty::where('id_kecamatan', $loggedInUserKecamatanId)->where('tahun_input', $latestYear)->pluck('id_desa')->unique()->toArray();
             // 
@@ -111,26 +108,23 @@ class MapController extends Controller
             $desValue = "";
             // dd($desValue);
         }else{
+            $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $latestYear)->pluck('id_kecamatan')->toArray();
 
-            $nameDes = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
-            ->where('tahun_input', $latestYear)
-            ->distinct('kecamatan.name')
-            ->pluck('kecamatan.name')
-            ->toArray();
-    
-            //ambil semua nilai pertahun
-            $desValue = [];
-            foreach ($kecId as $kec) {
-                $count = Poverty::where('id_kecamatan', $kec)->count();
-                $kecValue[] = $count;
+            $desValue2 = Kecamatan::pluck('name', 'id')->toArray();
+            $kecValue2 = [];
+            foreach ($desValue2 as $kecId => $kecamatan) {
+                $count = Poverty::where('id_kecamatan', $kecId)
+                                ->where('tahun_input', $latestYear)
+                                ->count();
+                // Masukkan jumlah penduduk miskin ke dalam array kecValue
+                $kecValue2[$kecId] = $count;
             }
-            $kecValue = [];
-            foreach ($kecId as $kec) {
-                $count = Poverty::where('id_kecamatan', $kec)->where('tahun_input', $latestYear)->count();
-                $kecValue[] = $count;
-            }
+
+            $nameDes = array_values($desValue2);
+            $kecValue = array_values($kecValue2);
+            $desValue = '';
+
         }
-        // dd($kecId, $kecValue);
        
         $message = 'kosong';
 
@@ -215,82 +209,82 @@ class MapController extends Controller
         
             if ($status === 'all') {
                 if ($selectedVar !== 'all') {
-                    $nameDes = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
-                        ->where('tahun_input', $selectedYear)
-                        ->where('pendidikan_terakhir', $selectedVar)
-                        ->distinct('kecamatan.name')
-                        ->pluck('kecamatan.name')
-                        ->toArray();
-        
-                    $desValue = Poverty::whereIn('id_kecamatan', $kecIdList)
-                        ->where('tahun_input', $selectedYear)
-                        ->where('pendidikan_terakhir', $selectedVar)
-                        ->get()
-                        ->groupBy('id_kecamatan')
-                        ->map(fn($group) => $group->count())
-                        ->values()
-                        ->toArray();
+                    $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $selectedYear)->where('pendidikan_terakhir', $selectedVar)->pluck('id_kecamatan')->toArray();
+
+                    $desValue2 = Kecamatan::pluck('name', 'id')->toArray();
+                    $kecValue2 = [];
+                    foreach ($desValue2 as $kecId => $kecamatan) {
+                        $count = Poverty::where('id_kecamatan', $kecId)
+                                        ->where('pendidikan_terakhir', $selectedVar)
+                                        ->where('tahun_input', $selectedYear)
+                                        ->count();
+
+                        $kecValue2[$kecId] = $count;
+                    }
+
+                    $nameDes = array_values($desValue2);
+                    $desValue = array_values($kecValue2);
                 } else {
-                    $nameDes = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
-                        ->where('tahun_input', $selectedYear)
-                        ->distinct('kecamatan.name')
-                        ->pluck('kecamatan.name')
-                        ->toArray();
-        
-                    $desValue = Poverty::whereIn('id_kecamatan', $kecIdList)
-                        ->where('tahun_input', $selectedYear)
-                        ->get()
-                        ->groupBy('id_kecamatan')
-                        ->map(fn($group) => $group->count())
-                        ->values()
-                        ->toArray();
+
+                    $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $selectedYear)->pluck('id_kecamatan')->toArray();
+
+                    $desValue2 = Kecamatan::pluck('name', 'id')->toArray();
+                    $kecValue2 = [];
+                    foreach ($desValue2 as $kecId => $kecamatan) {
+                        $count = Poverty::where('id_kecamatan', $kecId)
+                                        ->where('tahun_input', $selectedYear)
+                                        ->count();
+
+                        $kecValue2[$kecId] = $count;
+                    }
+
+                    $nameDes = array_values($desValue2);
+                    $desValue = array_values($kecValue2);
+                    
                 }
             } else {
                 if ($selectedVar !== 'all') {
-                    $nameDes = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
-                        ->where('status_bantuan', $status)
-                        ->where('tahun_input', $selectedYear)
-                        ->where('pendidikan_terakhir', $selectedVar)
-                        ->distinct('kecamatan.name')
-                        ->pluck('kecamatan.name')
-                        ->toArray();
-        
-                    $desValue = Poverty::whereIn('id_kecamatan', $kecIdList)
-                        ->where('status_bantuan', $status)
-                        ->where('tahun_input', $selectedYear)
-                        ->where('pendidikan_terakhir', $selectedVar)
-                        ->get()
-                        ->groupBy('id_kecamatan')
-                        ->map(fn($group) => $group->count())
-                        ->values()
-                        ->toArray();
+                                       
+                    $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $selectedYear)->where('status_bantuan', $status)->where('pendidikan_terakhir', $selectedVar)->pluck('id_kecamatan')->toArray();
+
+                    $desValue2 = Kecamatan::pluck('name', 'id')->toArray();
+                    $kecValue2 = [];
+                    foreach ($desValue2 as $kecId => $kecamatan) {
+                        $count = Poverty::where('id_kecamatan', $kecId)
+                                        ->where('pendidikan_terakhir', $selectedVar)
+                                        ->where('status_bantuan', $status)
+                                        ->where('tahun_input', $selectedYear)
+                                        ->count();
+
+                        $kecValue2[$kecId] = $count;
+                    }
+
+                    $nameDes = array_values($desValue2);
+                    $desValue = array_values($kecValue2);
                 } else {
-                    $nameDes = Poverty::join('kecamatan', 'poverties.id_kecamatan', '=', 'kecamatan.id')
-                        ->where('status_bantuan', $status)
-                        ->where('tahun_input', $selectedYear)
-                        ->distinct('kecamatan.name')
-                        ->pluck('kecamatan.name')
-                        ->toArray();
-        
-                    $desValue = Poverty::whereIn('id_kecamatan', $kecIdList)
-                        ->where('status_bantuan', $status)
-                        ->where('tahun_input', $selectedYear)
-                        ->get()
-                        ->groupBy('id_kecamatan')
-                        ->map(fn($group) => $group->count())
-                        ->values()
-                        ->toArray();
+                    $kecId = Poverty::distinct('id_kecamatan')->where('tahun_input', $selectedYear)->where('status_bantuan', $status)->pluck('id_kecamatan')->toArray();
+
+                    $desValue2 = Kecamatan::pluck('name', 'id')->toArray();
+                    $kecValue2 = [];
+                    foreach ($desValue2 as $kecId => $kecamatan) {
+                        $count = Poverty::where('id_kecamatan', $kecId)
+                                        ->where('status_bantuan', $status)
+                                        ->where('tahun_input', $selectedYear)
+                                        ->count();
+
+                        $kecValue2[$kecId] = $count;
+                    }
+
+                    $nameDes = array_values($desValue2);
+                    $desValue = array_values($kecValue2);
                 }
             }
         } else {
             if ($selectedVar !== 'all') {
-                $nameDes = Poverty::join('desa', 'poverties.id_desa', '=', 'desa.id')
+                $nameDes = Poverty::join('desa', 'poverties.id_desa', '=', 'desa.id')->when($status !== 'all', function ($query) use ($status) {
+                    return $query->where('status_bantuan', $status);
+                })
                     ->where('poverties.id_kecamatan', $kecId)
-                    ->when($status !== 'all', function ($query) use ($status) {
-                        return $query->where('poverties.status_bantuan', $status);
-                    })
-                    ->where('tahun_input', $selectedYear)
-                    ->where('pendidikan_terakhir', $selectedVar)
                     ->distinct('desa.name_desa')
                     ->pluck('desa.name_desa')
                     ->toArray();
@@ -306,6 +300,10 @@ class MapController extends Controller
                         ->count();
                     $desValue[] = $count;
                 }
+
+                
+
+                
             } else {
                 $nameDes = Poverty::join('desa', 'poverties.id_desa', '=', 'desa.id')
                     ->where('poverties.id_kecamatan', $kecId)

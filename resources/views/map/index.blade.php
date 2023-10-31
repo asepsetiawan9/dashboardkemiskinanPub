@@ -32,8 +32,8 @@
                         <div for="filter2" class="text-white text-sm pb-2 text-bold">Kecamatan:</div>
                         <select class="form-select" id="filter2" onchange="filterByKecamatan()" @if($userRole === 'Kecamatan') disabled @endif>
                             <option value="kecamatan">Pilih Kecamatan</option>
-                            @foreach ($kecLabels as $index => $kecLabel)
-                                <option value="{{ $kecId[$index] }}" @if($userRole === 'Kecamatan' && $kecId[$index] === $loggedInUserKecamatanId) selected @endif>{{ $kecLabel }}</option>
+                            @foreach ($kecLabels as $id => $kecLabel)
+                                <option value="{{ $id }}" @if($userRole === 'Kecamatan' && $id === $loggedInUserKecamatanId) selected @endif>{{ $kecLabel }}</option>
                             @endforeach
                         </select>
                     </div>
